@@ -1,53 +1,195 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <style>
     body {
-        background-color: #f8f9fa;
-    }
-
-    .jumbotron {
-        background-color: #007bff;
-        color: #fff;
-        padding: 2rem 1rem;
-        margin-bottom: 2rem;
-        border-radius: 0;
-    }
-
-    .jumbotron h1 {
-        font-size: 2.5rem;
-    }
-
-    .container {
-        margin-top: 2rem;
+        overflow: hidden !important;
     }
 </style>
-<section id="main-home-section">
-    <div class="jumbotron text-center">
-        <h1 class="display-4">Welcome to Classroom Management</h1>
-        <p class="lead">Empowering education through technology.</p>
-    </div>
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>About Us</h2>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget ex eu ante bibendum dignissim vel
-                    vel ipsum.
-                </p>
+<section class="auth-main h-screen overflow-hidden" style="background-image: url({% static "img/bg-auth-igcms.png" %});">
+    <div class="auth-main-wrapper relative">
+        <div class="auth-container rounded-xl shadow-md">
+            <div class="w-full h-full space-x-2 items-center flex justify-between">
+                <div
+                    class="w-full md:w-1/2 h-full bg-gradient-to-bl from-transparent via-blue-300/40 to-blue-600/50 rounded-l-xl p-4">
+                    <div class="w-full h-full" style="background-image: url({% static "img/bg-auth-wrapp.png" %})">
+                        <h1 id='welTxt' class="text-2xl stymie"></h1>
+                        <p id='logPtxt' class="text-gray-600"></p>
+                        <script>
+                            let welTxt = document.getElementById("welTxt");
+                            let logPtxt = document.getElementById("logPtxt");
+                            let txt = "Welcome back!";
+                            let txt2 = "Please login to your account.";
+                            let i = 0;
+                            let j = 0;
+                            let speed = 50;
+                            let speed2 = 100;
+                            function typeWriter() {
+                                if (i < txt.length) {
+                                    welTxt.innerHTML += txt.charAt(i);
+                                    i++;
+                                    setTimeout(typeWriter, speed);
+                                }
+                            }
+                            function typeWriter2() {
+                                if (j < txt2.length) {
+                                    logPtxt.innerHTML += txt2.charAt(j);
+                                    j++;
+                                    setTimeout(typeWriter2, speed2);
+                                }
+                            }
+                            typeWriter();
+                            typeWriter2();
+                        </script>
+                    </div>
+                </div>
+                <div class="w-1/2 h-full p-4">
+                    <div class="mx-5">
+                        <div class="border-2 px-1 py-1 rounded-full w-full backdrop-blur-3xl">
+                            <div class="flex justify-between">
+                                <button id="switchStudent"
+                                    class="bg-slate-50 w-1/2 karnak font-medium rounded-full px-4 py-1 text-blue-950">
+                                    Student
+                                </button>
+                                <button id="switchTeacher"
+                                    class="w-1/2 karnak font-medium rounded-full px-4 py-1 text-white">
+                                    Teacher
+                                </button>
+                                <script>
+                                    let switchStudent = document.getElementById("switchStudent");
+                                    let switchTeacher = document.getElementById("switchTeacher");
+
+                                    switchStudent.addEventListener("click", function () {
+                                        switchStudent.classList.remove("text-white");
+                                        switchStudent.classList.add("text-blue-950");
+                                        switchTeacher.classList.remove("text-blue-950");
+                                        switchTeacher.classList.remove("bg-slate-50");
+                                        switchStudent.classList.add("bg-slate-50");
+                                        switchTeacher.classList.add("text-white");
+                                    });
+                                    switchTeacher.addEventListener("click", function () {
+                                        switchTeacher.classList.remove("text-white");
+                                        switchTeacher.classList.add("text-blue-950");
+                                        switchTeacher.classList.add("bg-slate-50");
+                                        switchStudent.classList.remove("bg-slate-50");
+                                        switchStudent.classList.remove("text-blue-950");
+                                        switchStudent.classList.add("text-white");
+                                    });
+
+                                    switchStudent.addEventListener("click", function () {
+                                        let studentForm = document.getElementById("studentForm");
+                                        let teacherForm = document.getElementById("teacherForm");
+                                        studentForm.classList.remove("hidden");
+                                        teacherForm.classList.add("hidden");
+                                    });
+                                    switchTeacher.addEventListener("click", function () {
+                                        let studentForm = document.getElementById("studentForm");
+                                        let teacherForm = document.getElementById("teacherForm");
+                                        teacherForm.classList.remove("hidden");
+                                        studentForm.classList.add("hidden");
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        <form class="mt-10" method="post" id="studentForm" action="">
+                            {% csrf_token %}
+                            <div class="">
+                                <div class="mb-3 w-full">
+                                    <label for="username" class="stymie ml-2 tracking-wider text-sm">Roll No.</label>
+                                    <input type="number"
+                                        class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
+                                        id="username" name="username" required>
+                                </div>
+                                <div class="mb-3 w-full">
+                                    <label for="password" class="stymie ml-2 tracking-wider text-sm">Password</label>
+                                    <input type="password"
+                                        class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
+                                        id="password" name="password" required>
+                                </div>
+                                <div class="flex ml-2 items-center mb-3">
+                                    <input type="checkbox" id="customCheckbox" class="hidden" required>
+                                    <label for="customCheckbox" class="flex items-center cursor-pointer">
+                                        <div
+                                            class="w-4 h-4 border border-gray-700 flex justify-center items-center rounded-full mr-2">
+                                            <div id="checkIco" class="hidden w-2 h-2 rounded-full bg-blue-950"></div>
+                                        </div>
+                                        <span class="text-sm">Remember me</span>
+                                    </label>
+                                </div>
+                                <script>
+                                    document.getElementById("customCheckbox").addEventListener("change", function () {
+                                        var checkbox = document.getElementById("customCheckbox");
+                                        var svg = document.getElementById("checkIco");
+                                        if (checkbox.checked) {
+                                            svg.classList.remove("hidden");
+                                        } else {
+                                            svg.classList.add("hidden");
+                                        }
+                                    });
+                                </script>
+                                <button type="submit"
+                                    class="w-full mt-3 h-8 stymie rounded-full bg-blue-950 text-white">Login</button>
+                            </div>
+                        </form>
+                        <form class="mt-10 hidden" id="teacherForm" method="post" action="">
+                            {% csrf_token %}
+                            <div class="">
+                                <div class="mb-3 w-full">
+                                    <label for="username" class="stymie ml-2 tracking-wider text-sm">Email</label>
+                                    <input type="email"
+                                        class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
+                                        id="username" name="username" required>
+                                </div>
+                                <div class="mb-3 w-full">
+                                    <label for="password" class="stymie ml-2 tracking-wider text-sm">Password</label>
+                                    <input type="password"
+                                        class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
+                                        id="password" name="password" required>
+                                </div>
+                                <div class="flex ml-2 items-center mb-3">
+                                    <input type="checkbox" id="customCheckbox" class="hidden" required>
+                                    <label for="customCheckbox" class="flex items-center cursor-pointer">
+                                        <div
+                                            class="w-4 h-4 border border-gray-700 flex justify-center items-center rounded-full mr-2">
+                                            <div id="checkIco" class="hidden w-2 h-2 rounded-full bg-blue-950"></div>
+                                        </div>
+                                        <span class="text-sm">Remember me</span>
+                                    </label>
+                                </div>
+                                <script>
+                                    document.getElementById("customCheckbox").addEventListener("change", function () {
+                                        var checkbox = document.getElementById("customCheckbox");
+                                        var svg = document.getElementById("checkIco");
+                                        if (checkbox.checked) {
+                                            svg.classList.remove("hidden");
+                                        } else {
+                                            svg.classList.add("hidden");
+                                        }
+                                    });
+                                </script>
+                                <button type="submit" class="w-full mt-3 h-8 stymie rounded-full bg-blue-950 text-white">
+                                    Login
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <h2>Features</h2>
-                <ul>
-                    <li>Efficient classroom organization</li>
-                    <li>Real-time updates on student progress</li>
-                    <li>Interactive learning tools</li>
-                    <li>Secure and reliable</li>
-                </ul>
+        </div>
+        <div id="copyrightBox"
+            class="absolute -bottom-10 px-5 py-1.5 rounded-t-lg transition-all border border-white border-b-0 duration-1000 bg-slate-700/20 backdrop-blur-3xl">
+            <script>
+                let box = document.getElementById("copyrightBox");
+                setTimeout(() => {
+                    box.classList.remove("-bottom-10");
+                    box.classList.add("bottom-0");
+                }, 2000)
+            </script>
+            <div class="">
+                <p class="text-gray-950 font-semibold text-sm">© 2024 IgCMS. All rights reserved.</p>
             </div>
         </div>
     </div>
 </section>
-
 {% endblock %}

@@ -24,3 +24,8 @@
 
 # Ignore environment variables file
 .env
+input.css
+
+# Ignore npm files
+node_modules/
+package-lock.json

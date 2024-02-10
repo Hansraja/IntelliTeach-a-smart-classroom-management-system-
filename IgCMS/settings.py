@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,8 +66,12 @@ WSGI_APPLICATION = 'IgCMS.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'igcms',
+        'USER': 'igcms',
+        'PASSWORD': 'Ig@CMS#r1',
+        'HOST': '8.208.33.217',
+        'PORT': '3306',
     }
 }
 
@@ -107,6 +112,9 @@ USE_TZ = True
 
 STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'Home/static'
+]
 
 # MEDIA_ROOT = BASE_DIR / 'media' #TODO: Uncomment this line, and the next one, to enable media files
 # MEDIA_URL = 'media/'

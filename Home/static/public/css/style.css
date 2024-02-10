@@ -1,0 +1,42 @@
+body {
+    font-family: 'rb-franklin', 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+.auth-main {
+    /* background-image: url('https://cdn.vectorstock.com/i/preview-1x/44/27/chemistry-cabinet-classroom-laboratory-interior-vector-45094427.webp'); */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-main-wrapper {
+    position: relative;
+    width: 100%;
+    backdrop-filter: blur(20px);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-container {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.06);
+    /* padding: 20px; */
+    /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2); */
+    width: 700px;
+    height: calc(100vh - 150px);
+    /* display: flex; */
+    backdrop-filter: blur(60px);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
