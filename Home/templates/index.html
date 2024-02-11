@@ -54,7 +54,7 @@
                                 </button>
                                 <button id="switchTeacher"
                                     class="w-1/2 karnak font-medium rounded-full px-4 py-1 text-white">
-                                    Teacher
+                                    Faculty
                                 </button>
                                 <script>
                                     let switchStudent = document.getElementById("switchStudent");
@@ -92,14 +92,24 @@
                                 </script>
                             </div>
                         </div>
-                        <form class="mt-10" method="post" id="studentForm" action="">
+                        <form class="mt-10" method="post" id="studentForm" action=''>
                             {% csrf_token %}
+                            <div id='errorBox' class="">
+                                {% if messages and selected == 'student' %}
+                                {% for message in messages %}
+                                    <div class="{% if message.type == 'error' %}bg-red-700{% else %} bg-yellow-700{% endif %} my-2 p-2 rounded-lg">
+                                        <p class="text-slate-300 text-sm text-center"> {{ message.text }} </p>
+                                    </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
                             <div class="">
+                                <input type="hidden" name="selected" value="student">
                                 <div class="mb-3 w-full">
-                                    <label for="username" class="stymie ml-2 tracking-wider text-sm">Roll No.</label>
-                                    <input type="number"
+                                    <label for="rollNo" class="stymie ml-2 tracking-wider text-sm">Roll No.</label>
+                                    <input type="number" min="1"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
-                                        id="username" name="username" required>
+                                        id="rollNo" name="roll_number" required>
                                 </div>
                                 <div class="mb-3 w-full">
                                     <label for="password" class="stymie ml-2 tracking-wider text-sm">Password</label>
@@ -107,7 +117,7 @@
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
                                         id="password" name="password" required>
                                 </div>
-                                <div class="flex ml-2 items-center mb-3">
+                                <!-- <div class="flex ml-2 items-center mb-3">
                                     <input type="checkbox" id="customCheckbox" class="hidden" required>
                                     <label for="customCheckbox" class="flex items-center cursor-pointer">
                                         <div
@@ -116,69 +126,116 @@
                                         </div>
                                         <span class="text-sm">Remember me</span>
                                     </label>
-                                </div>
-                                <script>
+                                </div> -->
+                                <span class="text-xs text-gray-500">* Roll No. is your unique identification number</span>
+                                <p class="text-xs text-gray-500">* If you are a new student, please contact your class
+                                    teacher for login credentials.</p>
+                                <!-- <script>
                                     document.getElementById("customCheckbox").addEventListener("change", function () {
-                                        var checkbox = document.getElementById("customCheckbox");
-                                        var svg = document.getElementById("checkIco");
+                                        let checkbox = document.getElementById("customCheckbox");
+                                        let svg = document.getElementById("checkIco");
                                         if (checkbox.checked) {
                                             svg.classList.remove("hidden");
                                         } else {
                                             svg.classList.add("hidden");
                                         }
                                     });
-                                </script>
-                                <button type="submit"
+                                </script> -->
+                                <button id='studentBtn' type="submit"
                                     class="w-full mt-3 h-8 stymie rounded-full bg-blue-950 text-white">Login</button>
+                                    <!-- <script>
+                                        let btn = document.getElementById("studentBtn");
+                                        // let checkbox = document.getElementById("customCheckbox");
+                                        // let svg = document.getElementById("checkIco");
+                                        btn.addEventListener("click", function(){
+                                            // if (checkbox.checked){
+                                                btn.innerHTML = "Logging in...";
+                                            // } else {
+                                            //     svg.parentElement.classList.add("border-red-700");
+                                            // }
+                                            
+                                        });
+                                    </script> -->
                             </div>
+
                         </form>
-                        <form class="mt-10 hidden" id="teacherForm" method="post" action="">
+                        <form class="mt-10 hidden" id="teacherForm" method="post" action="/">
                             {% csrf_token %}
+                            <div id='errorFaculty' class="">
+                                {% if messages and selected == 'faculty' %}
+                                {% for message in messages %}
+                                    <div class="{% if message.type == 'error' %}bg-red-700{% else %} bg-yellow-700{% endif %} my-2 p-2 rounded-lg">
+                                        <p class="text-slate-300 text-sm text-center"> {{ message.text }} </p>
+                                    </div>
+                                {% endfor %}
+                                {% endif %}
+                            </div>
                             <div class="">
+                                <input type="hidden" name="selected" value="faculty">
                                 <div class="mb-3 w-full">
-                                    <label for="username" class="stymie ml-2 tracking-wider text-sm">Email</label>
+                                    <label for="email" class="stymie ml-2 tracking-wider text-sm">Email</label>
                                     <input type="email"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
-                                        id="username" name="username" required>
+                                        id="email" name="email" required>
                                 </div>
                                 <div class="mb-3 w-full">
-                                    <label for="password" class="stymie ml-2 tracking-wider text-sm">Password</label>
+                                    <label for="password-tech" class="stymie ml-2 tracking-wider text-sm">Password</label>
                                     <input type="password"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
-                                        id="password" name="password" required>
+                                        id="password-tech" name="password" required>
                                 </div>
-                                <div class="flex ml-2 items-center mb-3">
-                                    <input type="checkbox" id="customCheckbox" class="hidden" required>
-                                    <label for="customCheckbox" class="flex items-center cursor-pointer">
+                                {% comment %} <div class="flex ml-2 items-center mb-3">
+                                    <input type="checkbox" id="customTechCheckbox" class="hidden" required>
+                                    <label for="customTechCheckbox" class="flex items-center cursor-pointer">
                                         <div
                                             class="w-4 h-4 border border-gray-700 flex justify-center items-center rounded-full mr-2">
-                                            <div id="checkIco" class="hidden w-2 h-2 rounded-full bg-blue-950"></div>
+                                            <div id="checkTechIco" class="hidden w-2 h-2 rounded-full bg-blue-950"></div>
                                         </div>
                                         <span class="text-sm">Remember me</span>
                                     </label>
-                                </div>
-                                <script>
-                                    document.getElementById("customCheckbox").addEventListener("change", function () {
-                                        var checkbox = document.getElementById("customCheckbox");
-                                        var svg = document.getElementById("checkIco");
+                                </div> {% endcomment %}
+                                {% comment %} <script>
+                                    document.getElementById("customTechCheckbox").addEventListener("change", function () {
+                                        let checkbox = document.getElementById("customTechCheckbox");
+                                        let svg = document.getElementById("checkTechIco");
                                         if (checkbox.checked) {
                                             svg.classList.remove("hidden");
                                         } else {
                                             svg.classList.add("hidden");
                                         }
                                     });
-                                </script>
+                                </script> {% endcomment %}
+                                <p class="text-xs text-gray-500">* If you are a new faculty, please contact the
+                                    administrator for login credentials.</p>
                                 <button type="submit" class="w-full mt-3 h-8 stymie rounded-full bg-blue-950 text-white">
                                     Login
                                 </button>
                             </div>
                         </form>
+                            <script>
+                                let selected = "{{selected}}"
+                                if (selected == 'faculty'){
+                                    let switchStudent = document.getElementById("switchStudent");
+                                    let switchTeacher = document.getElementById("switchTeacher");
+                                    switchTeacher.classList.remove("text-white");
+                                    switchTeacher.classList.add("text-blue-950");
+                                    switchTeacher.classList.add("bg-slate-50");
+                                    switchStudent.classList.remove("bg-slate-50");
+                                    switchStudent.classList.remove("text-blue-950");
+                                    switchStudent.classList.add("text-white");
+
+                                    let studentForm = document.getElementById("studentForm");
+                                    let teacherForm = document.getElementById("teacherForm");
+                                    teacherForm.classList.remove("hidden");
+                                    studentForm.classList.add("hidden");
+                                };
+                            </script>
                     </div>
                 </div>
             </div>
         </div>
         <div id="copyrightBox"
-            class="absolute -bottom-10 px-5 py-1.5 rounded-t-lg transition-all border border-white border-b-0 duration-1000 bg-slate-700/20 backdrop-blur-3xl">
+            class="absolute -bottom-10 px-5 py-1.5 rounded-t-lg transition-all duration-1000">
             <script>
                 let box = document.getElementById("copyrightBox");
                 setTimeout(() => {

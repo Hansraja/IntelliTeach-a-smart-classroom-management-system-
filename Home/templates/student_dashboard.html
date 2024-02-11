@@ -1,0 +1,100 @@
+<!-- FILEPATH: /d:/Python_Projects/IgCMS/Home/templates/student_dashboard.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Student Dashboard</h1>
+
+  <div class="grid grid-cols-3 gap-4">
+    <!-- Sidebar -->
+    <div class="col-span-1">
+      <ul class="space-y-2">
+        <li><a href="#" class="text-blue-500">Profile</a></li>
+        <li><a href="#" class="text-blue-500">Courses</a></li>
+        <li><a href="#" class="text-blue-500">Grades</a></li>
+        <li><a href="#" class="text-blue-500">Attendance</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-span-2">
+      <!-- Profile -->
+      <div id="profile" class="mb-4">
+        <h2 class="text-xl font-bold mb-2">Profile</h2>
+        <p>Name: John Doe</p>
+        <p>Email: john.doe@example.com</p>
+        <p>Phone: 123-456-7890</p>
+      </div>
+
+      <!-- Courses -->
+      <div id="courses" class="mb-4">
+        <h2 class="text-xl font-bold mb-2">Courses</h2>
+        <ul>
+          <li>Mathematics</li>
+          <li>Science</li>
+          <li>English</li>
+        </ul>
+      </div>
+
+      <!-- Grades -->
+      <div id="grades" class="mb-4">
+        <h2 class="text-xl font-bold mb-2">Grades</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mathematics</td>
+              <td>A</td>
+            </tr>
+            <tr>
+              <td>Science</td>
+              <td>B</td>
+            </tr>
+            <tr>
+              <td>English</td>
+              <td>A-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Attendance -->
+      <div id="attendance">
+        <h2 class="text-xl font-bold mb-2">Attendance</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2022-01-01</td>
+              <td>Present</td>
+            </tr>
+            <tr>
+              <td>2022-01-02</td>
+              <td>Absent</td>
+            </tr>
+            <tr>
+              <td>2022-01-03</td>
+              <td>Present</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Inline JavaScript code here
+</script>
+{% endblock %}

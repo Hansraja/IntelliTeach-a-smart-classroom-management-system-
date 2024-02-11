@@ -23,11 +23,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Admin',
 ] 
 
 INSTALLED_APPS += [
-    'Home'
+    'Home',
 ]
+
+
+AUTH_USER_MODEL = 'Admin.AuthUser'
+# AUTHENTICATION_BACKENDS = ['Admin.backends.AuthBackend']
 
 
 MIDDLEWARE = [
