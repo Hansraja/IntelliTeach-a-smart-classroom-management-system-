@@ -22,8 +22,8 @@
                     font-bold text-2xl">Dashboard</a>
                 </div>
                 <div class="relative flex items-center space-x-10">
-                    <div class="w-auto justify-center items-center flex">
-                        <span class="text-white material-symbols-outlined"> message </span>
+                    <div class="w-auto justify-center rounded-full bg-slate-700 p-1 items-center flex">
+                        <span class="text-white !text-[1.3rem] material-symbols-outlined"> message </span>
                     </div>
                     {% if user.is_authenticated and user.picture %}
                     <img id="accountMenuBtn" src="{{user.picture.url}}" alt="{{user.username}}"
@@ -36,11 +36,8 @@
                     </div>
                     {% endif %}
                     <div id="accountMenu"
-                        class="hidden p-4 shadow-xl absolute rounded-md top-10 right-4 w-48 bg-zinc-900 h-36">
-                        <div class="text-gray-50">
-                            <p>Hello</p>
-
-                        </div>
+                        class="hidden p-4 shadow-xl absolute rounded-md top-10 right-4 w-48 text-slate-50 bg-slate-950 h-36">
+                        <a href="{% url 'faculty_profile' %}" class="block rounded-md py-2 px-4 font-semibold hover:bg-slate-700">Profile</a>
                     </div>
                     <script>
                         let accountMenu = document.getElementById('accountMenu');
@@ -75,7 +72,7 @@
                 </div>
             </div>
         </sidebar>
-        <section class="left-56 p-4 rounded-md top-16 bottom-4 h-[calc(100vh-80px)] overflow-y-auto overflow-x-auto bg-white mr-4 relative w-[calc(100%-240px)]">
+        <section class="left-56 main-scrollbar p-4 rounded-md top-16 bottom-4 h-[calc(100vh-80px)] overflow-y-auto overflow-x-auto bg-white mr-4 relative w-[calc(100%-240px)]">
             <section class="">
                 {% block content %}
                 {% endblock %}

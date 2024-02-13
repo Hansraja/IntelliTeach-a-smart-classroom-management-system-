@@ -17,3 +17,8 @@ def faculty_Profile(request):
 
     context = {'title': title, 'menuItems': menu }
     return render(request, 'settings/profile.html', context=context)
+
+def add_student(request):
+    context = {'title': title, 'menuItems': menu }
+    return render(request, 'faculty/add_students.html', context=context)
+
