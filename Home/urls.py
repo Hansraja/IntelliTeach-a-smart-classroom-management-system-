@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import HomePage, facultyDashboard, studentDashboard
+from .views import HomePage, studentDashboard, Images
 
 urlpatterns = [
     path('', HomePage.as_view, name='home'),
-    path('faculty_dashboard/', facultyDashboard, name='faculty_dashboard'),
-    path('student_dashboard/', studentDashboard, name='student_dashboard')
+    path('student_dashboard/', studentDashboard, name='student_dashboard'),
+    path('media/<path:path>', Images, name='images')
 ]

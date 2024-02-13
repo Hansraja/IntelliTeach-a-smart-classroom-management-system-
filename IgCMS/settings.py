@@ -28,6 +28,8 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'Home',
+    'faculty',
+    'student'
 ]
 
 
@@ -121,8 +123,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'Home/static'
 ]
 
-# MEDIA_ROOT = BASE_DIR / 'media' #TODO: Uncomment this line, and the next one, to enable media files
-# MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media' #TODO: Uncomment this line, and the next one, to enable media files
+MEDIA_URL = 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

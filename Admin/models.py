@@ -15,7 +15,7 @@ class AuthUser(AbstractBaseUser, PermissionsMixin):
         error_messages={
             'unique': _("A user with that email already exists."),
         },)
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    first_name = models.CharField(_('first name'), max_length=30)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)

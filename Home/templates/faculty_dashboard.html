@@ -1,33 +1,36 @@
-{% extends 'base.html' %}
+{% extends 'dash-layout.html' %}
 
 {% block content %}
-    <header class="bg-gray-800 py-4">
-        <div class="container mx-auto px-4">
-            <h1 class="text-white text-2xl">Faculty Dashboard</h1>
-        </div>
-    </header>
 
-    <main class="container mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Dashboard cards go here -->
-            <div class="bg-white p-4 shadow">
-                <h2 class="text-lg font-semibold">Card 1</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-            <div class="bg-white p-4 shadow">
-                <h2 class="text-lg font-semibold">Card 2</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-            <div class="bg-white p-4 shadow">
-                <h2 class="text-lg font-semibold">Card 3</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-        </div>
-    </main>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  Age
+                </th>
+                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  Grade
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                  John Doe
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                  20
+                </td>
+                <td class="px-6 py-4 whitespace-no-wrap">
+                  A
+                </td>
+              </tr>
+              <!-- More student rows go here -->
+            </tbody>
+          </table>
 
-    <footer class="bg-gray-800 py-4">
-        <div class="container mx-auto px-4">
-            <p class="text-white text-center">© 2022 Faculty Dashboard. All rights reserved.</p>
-        </div>
-    </footer>
+
 {% endblock %}

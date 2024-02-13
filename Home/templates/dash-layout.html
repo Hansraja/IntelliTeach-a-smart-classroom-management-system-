@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.raviblog.tech/data/v2/css/rb-fonts.css">
+    <link rel="stylesheet" href="{% static "public/css/base.css" %}">
+    <link rel="stylesheet" href="{% static "public/css/style.css" %}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,100,0,-25" />
+    <title>{{title}}</title>
+</head>
+
+<body class="bg-gray-900 overflow-hidden">
+    <main>
+        <header class="fixed top-0 w-full z-50 bg-gray-900 h-16">
+            <div class="flex justify-between items-center px-4">
+                <div class="p-4">
+                    <a href="{% url 'home' %}" class="text-white
+                    font-bold text-2xl">Dashboard</a>
+                </div>
+                <div class="relative flex items-center space-x-10">
+                    <div class="w-auto justify-center items-center flex">
+                        <span class="text-white material-symbols-outlined"> message </span>
+                    </div>
+                    {% if user.is_authenticated and user.picture %}
+                    <img id="accountMenuBtn" src="{{user.picture.url}}" alt="{{user.username}}"
+                        class="w-8 cursor-pointer h-8 rounded-full">
+                    {% else %}
+
+                    <div id="accountMenuBtn"
+                        class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full bg-slate-800">
+                        <span class="text-white text-3xl material-symbols-outlined"> account_circle </span>
+                    </div>
+                    {% endif %}
+                    <div id="accountMenu"
+                        class="hidden p-4 shadow-xl absolute rounded-md top-10 right-4 w-48 bg-zinc-900 h-36">
+                        <div class="text-gray-50">
+                            <p>Hello</p>
+
+                        </div>
+                    </div>
+                    <script>
+                        let accountMenu = document.getElementById('accountMenu');
+                        document.getElementById('accountMenuBtn').addEventListener('click', function () {
+                            accountMenu.classList.toggle('hidden');
+                        });
+                        if (!accountMenu.classList.contains('hidden')) {
+                            document.onclick(this, function () { accountMenu.classList.add('hidden') })
+                        }
+                    </script>
+                </div>
+            </div>
+        </header>
+        <sidebar
+            class="bg-gray-900 scrollbar transition-all duration-1000 absolute w-56 left-0 top-16 h-[calc(100vh-64px)] overflow-x-hidden overflow-y-hidden hover:overflow-y-auto text-white">
+            <div class="flex flex-col justify-between">
+                {% if menuItems %}
+                {% for item in menuItems %}
+                <div class="mb-2 mx-2">
+                    <a href="{{item.url}}">
+                        <div
+                            class="hover:bg-slate-700 flex items-center line-clamp-1 truncate space-x-4 w-full rounded-md px-4 py-2">
+                            <span class="material-symbols-outlined"> {{item.icon}} </span>
+                            <span class="text-white text-sm font-medium">{{item.name}}</span>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div class="text-sm w-full cheltenham mx-auto px-3 my-2">
+                    <span> &copy; IGCMS.</span>
+                </div>
+            </div>
+        </sidebar>
+        <section class="left-56 p-4 rounded-md top-16 bottom-4 h-[calc(100vh-80px)] overflow-y-auto overflow-x-auto bg-white mr-4 relative w-[calc(100%-240px)]">
+            <section class="">
+                {% block content %}
+                {% endblock %}
+            </section>
+        </section>
+    </main>
+
+</body>
+
+</html>
