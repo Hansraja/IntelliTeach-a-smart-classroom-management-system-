@@ -10,7 +10,7 @@ class HomePage:
     def as_view(request):
         if request.user.is_authenticated:
             if request.user.is_faculty:
-                return redirect('/faculty_dashboard')
+                return redirect('teacher_dashboard')
             else:
                 return redirect('/student_dashboard')
             
@@ -24,7 +24,7 @@ class HomePage:
                 faculty = Faculty.objects.get(user_id=user.id) if user else None # type: ignore
                 if user is not None and user.is_faculty and faculty: # type: ignore
                     login(request, user) # type: ignore
-                    return redirect('/faculty_dashboard')
+                    return redirect('teacher_dashboard')
                 else:
                     return render(request=request, template_name='index.html', context={'title':title, 'messages': [{'text': 'Invalid Email or Password', 'type': 'error'}], 'selected': 'faculty'}) # type: ignore
             elif selected == 'student':

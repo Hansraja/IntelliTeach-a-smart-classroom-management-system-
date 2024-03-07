@@ -18,11 +18,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from Admin.views import admin_dashboard
+from teachers.views import teachers_list, delete_teacher, update_teacher
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('', include('Home.urls')),
-    path('faculty_dashboard/', include('faculty.urls')),
+    path('dashboard/', include('teachers.urls')),
+    path('', include('student.urls')),
+    path('admin/', admin_dashboard, name='admin_dashboard' ),
+    path('teachers/', teachers_list, name='teachers_list'),
+    path('delete_teacher/', delete_teacher, name='delete-teacher'),
+    path('update_teacher/', update_teacher, name='update-teacher'),
 ]
 
 if settings.DEBUG:

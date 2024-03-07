@@ -7,13 +7,15 @@
         overflow: hidden !important;
     }
 </style>
-<section class="auth-main h-screen overflow-hidden" style="background-image: url({% static "img/bg-auth-igcms.png" %});">
+<section class="auth-main text-white dark:text-white h-screen overflow-hidden">
+    {% comment %} style="background-image: url({% static "img/bg-auth-igcms.png" %}); {% endcomment %}
     <div class="auth-main-wrapper relative">
         <div class="auth-container rounded-xl shadow-md">
             <div class="w-full h-full space-x-2 items-center flex justify-between">
                 <div
-                    class="w-full md:w-1/2 h-full bg-gradient-to-bl from-transparent via-blue-300/40 to-blue-600/50 rounded-l-xl p-4">
-                    <div class="w-full h-full" style="background-image: url({% static "img/bg-auth-wrapp.png" %})">
+                    class="w-full md:w-1/2 h-full rounded-l-xl p-4">
+                    <div class="w-full h-full">
+                        {% comment %} style="background-image: url({% static "img/bg-auth-wrapp.png" %})" {% endcomment %}
                         <h1 id='welTxt' class="text-2xl stymie"></h1>
                         <p id='logPtxt' class="text-gray-600"></p>
                         <script>
@@ -106,13 +108,13 @@
                             <div class="">
                                 <input type="hidden" name="selected" value="student">
                                 <div class="mb-3 w-full">
-                                    <label for="rollNo" class="stymie ml-2 tracking-wider text-sm">Roll No.</label>
+                                    <label for="rollNo" class="stymie ml-2 text-white tracking-wider text-sm">Roll No.</label>
                                     <input type="number" min="1"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
                                         id="rollNo" name="roll_number" required>
                                 </div>
                                 <div class="mb-3 w-full">
-                                    <label for="password" class="stymie ml-2 tracking-wider text-sm">Password</label>
+                                    <label for="password" class="stymie ml-2 text-white tracking-wider text-sm">Password</label>
                                     <input type="password"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
                                         id="password" name="password" required>
@@ -173,13 +175,13 @@
                             <div class="">
                                 <input type="hidden" name="selected" value="faculty">
                                 <div class="mb-3 w-full">
-                                    <label for="email" class="stymie ml-2 tracking-wider text-sm">Email</label>
+                                    <label for="email" class="stymie ml-2 text-white tracking-wider text-sm">Email</label>
                                     <input type="email"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
                                         id="email" name="email" required>
                                 </div>
                                 <div class="mb-3 w-full">
-                                    <label for="password-tech" class="stymie ml-2 tracking-wider text-sm">Password</label>
+                                    <label for="password-tech" class="stymie ml-2 text-white tracking-wider text-sm">Password</label>
                                     <input type="password"
                                         class="w-full h-10 rounded-full focus-within:outline-none focus-within:border-blue-950 px-2 border border-slate-400 backdrop-blur-lg bg-transparent"
                                         id="password-tech" name="password" required>
@@ -205,8 +207,8 @@
                                         }
                                     });
                                 </script> {% endcomment %}
-                                <p class="text-xs text-gray-500">* If you are a new faculty, please contact the
-                                    administrator for login credentials.</p>
+                                <p class="text-xs text-gray-500">* If you are a new teacher, please contact the
+                                    administrator or Hod for login credentials.</p>
                                 <button type="submit" class="w-full mt-3 h-8 stymie rounded-full bg-blue-950 text-white">
                                     Login
                                 </button>

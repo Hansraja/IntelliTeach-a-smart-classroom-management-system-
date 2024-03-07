@@ -28,7 +28,7 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'Home',
-    'faculty',
+    'teachers',
     'student'
 ]
 
@@ -73,12 +73,12 @@ WSGI_APPLICATION = 'IgCMS.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'igcms',
-        'USER': 'igcms',
-        'PASSWORD': 'Ig@CMS#r1',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'IgCMS',
+        'USER': 'Igcms',
+        'PASSWORD': 'Ig@cms12',
         'HOST': '8.208.33.217',
-        'PORT': '3306',
+        'PORT': '5432',
     }
 }
 

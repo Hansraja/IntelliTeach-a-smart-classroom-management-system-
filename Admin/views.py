@@ -26,9 +26,8 @@ def faculty_login(request):
 
         if user is not None and user.is_faculty: # type: ignore
             login(request, user)
-            return redirect('faculty_dashboard')  # Replace with actual Faculty dashboard URL
+            return redirect('faculty_dashboard')
         else:
-            # Handle invalid login for Faculty
             pass
 
     return render(request, 'index.html')
@@ -41,9 +40,11 @@ def student_login(request):
 
         if user is not None and user.is_student: # type: ignore
             login(request, user)
-            return redirect('student_dashboard')  # Replace with actual Student dashboard URL
+            return redirect('student_dashboard')
         else:
-            # Handle invalid login for Student
             pass
-
     return render(request, 'index.html')
+
+
+def admin_dashboard(request):
+    return render(request, 'admin.html')

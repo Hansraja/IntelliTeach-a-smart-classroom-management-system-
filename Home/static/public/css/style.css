@@ -1,5 +1,7 @@
+@import url('https://cdn.raviblog.tech/data/v2/css/rb-fonts.css');
+
 body {
-    font-family: 'rb-franklin', 'Arial', sans-serif;
+    /* font-family: 'rb-franklin', 'Arial', sans-serif !important; */
     font-size: 16px;
     line-height: 1.6;
     margin: 0;
@@ -9,6 +11,7 @@ body {
 .auth-main {
     /* background-image: url('https://cdn.vectorstock.com/i/preview-1x/44/27/chemistry-cabinet-classroom-laboratory-interior-vector-45094427.webp'); */
     background-size: cover;
+    background-color: rgb(6, 6, 46);
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
@@ -20,7 +23,7 @@ body {
 .auth-main-wrapper {
     position: relative;
     width: 100%;
-    backdrop-filter: blur(20px);
+    /* backdrop-filter: blur(20px); */
     height: 100%;
     display: flex;
     justify-content: center;
@@ -29,7 +32,7 @@ body {
 
 .auth-container {
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: rgba(42, 47, 85, 0.5);
     /* padding: 20px; */
     /* box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2); */
     width: 700px;
@@ -78,3 +81,74 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 } */
+
+.rb-nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: block;
+}
+
+.rb-nav-link {
+    transition: all 0.3s ease !important;
+}
+
+.rb-nav-link:hover {
+    background-color: #adadad;
+    color: #000000 !important;
+}
+
+.rb-nav-link i {
+    margin-right: 5px;
+}
+
+.rb-nav-link .span {
+    font-weight: 600 !important;
+    font-family: 'rb-franklin' !important;
+}
+
+.student-list-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 1000px;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.rb-table-row {
+    transition: all 0.3s ease;
+}
+
+.__ {
+    text-align: center !important;
+}
+
+.roll_link {
+    cursor: pointer;
+    color: #000000 !important;
+    font-weight: 600;
+}
+
+.roll_link:hover {
+    color: #000000 !important;
+    text-decoration: underline;
+}
+
+.table_image {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+@media (min-width: 768px) {
+    .user-profile-menu {
+        right: 10px !important;
+        position: fixed !important;
+        width: auto !important;
+        left: auto !important;
+        top: 70px !important;
+        overflow: hidden !important;
+        padding: 10px !important;
+    }
+}

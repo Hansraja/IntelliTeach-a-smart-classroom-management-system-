@@ -1,84 +1,326 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.raviblog.tech/data/v2/css/rb-fonts.css">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>{{ title }}</title>
     <link rel="stylesheet" href="{% static "public/css/base.css" %}">
     <link rel="stylesheet" href="{% static "public/css/style.css" %}">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,100,0,-25" />
-    <title>{{title}}</title>
+    <!-- Custom fonts for this template-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="{% static "public/css/admin.min.css" %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.css">
 </head>
 
-<body class="bg-gray-900 overflow-hidden">
-    <main>
-        <header class="fixed top-0 w-full z-50 bg-gray-900 h-16">
-            <div class="flex justify-between items-center px-4">
-                <div class="p-4">
-                    <a href="{% url 'home' %}" class="text-white
-                    font-bold text-2xl">Dashboard</a>
-                </div>
-                <div class="relative flex items-center space-x-10">
-                    <div class="w-auto justify-center rounded-full bg-slate-700 p-1 items-center flex">
-                        <span class="text-white !text-[1.3rem] material-symbols-outlined"> message </span>
-                    </div>
-                    {% if user.is_authenticated and user.picture %}
-                    <img id="accountMenuBtn" src="{{user.picture.url}}" alt="{{user.username}}"
-                        class="w-8 cursor-pointer h-8 rounded-full">
-                    {% else %}
+<body id="page-top" class="bg-white">
+    <nav class="navbar navbar-expand navbar-light bg-white topbar static-top !border-b !border-slate-300 rb-nav-bar">
 
-                    <div id="accountMenuBtn"
-                        class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full bg-slate-800">
-                        <span class="text-white text-3xl material-symbols-outlined"> account_circle </span>
-                    </div>
-                    {% endif %}
-                    <div id="accountMenu"
-                        class="hidden p-4 shadow-xl absolute rounded-md top-10 right-4 w-48 text-slate-50 bg-slate-950 h-36">
-                        <a href="{% url 'faculty_profile' %}" class="block rounded-md py-2 px-4 font-semibold hover:bg-slate-700">Profile</a>
-                    </div>
-                    <script>
-                        let accountMenu = document.getElementById('accountMenu');
-                        document.getElementById('accountMenuBtn').addEventListener('click', function () {
-                            accountMenu.classList.toggle('hidden');
-                        });
-                        if (!accountMenu.classList.contains('hidden')) {
-                            document.onclick(this, function () { accountMenu.classList.add('hidden') })
-                        }
-                    </script>
+        <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+        </button>
+        {% comment %} <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div> {% endcomment %}
+
+        {% comment %} <a class="" href="/"> {% endcomment %}
+            <h3 class="text-lg font-bold mx-2">{{title}}</h3>
+        {% comment %} </a> {% endcomment %}
+
+        {% comment %} <form
+            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                    aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary bg-slate-900" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
                 </div>
             </div>
-        </header>
-        <sidebar
-            class="bg-gray-900 scrollbar transition-all duration-1000 absolute w-56 left-0 top-16 h-[calc(100vh-64px)] overflow-x-hidden overflow-y-hidden hover:overflow-y-auto text-white">
-            <div class="flex flex-col justify-between">
-                {% if menuItems %}
-                {% for item in menuItems %}
-                <div class="mb-2 mx-2">
-                    <a href="{{item.url}}">
-                        <div
-                            class="hover:bg-slate-700 flex items-center line-clamp-1 truncate space-x-4 w-full rounded-md px-4 py-2">
-                            <span class="material-symbols-outlined"> {{item.icon}} </span>
-                            <span class="text-white text-sm font-medium">{{item.name}}</span>
+        </form> {% endcomment %}
+
+        <ul class="navbar-nav ml-auto">
+
+            <li class="nav-item dropdown no-arrow d-sm-none">
+                <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-search fa-fw"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                    aria-labelledby="searchDropdown">
+                    <form class="form-inline mr-auto w-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small"
+                                placeholder="Search for..." aria-label="Search"
+                                aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            {% comment %} <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell fa-fw"></i>
+                    <!-- Counter - Alerts -->
+                    <span class="badge badge-danger badge-counter">3+</span>
+                </a>
+                <!-- Dropdown - Alerts -->
+                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                    aria-labelledby="alertsDropdown">
+                    <h6 class="dropdown-header">
+                        Alerts Center
+                    </h6>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-primary">
+                                <i class="fas fa-file-alt text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="small text-gray-500">December 12, 2019</div>
+                            <span class="font-weight-bold">A new monthly report is ready to download!</span>
                         </div>
                     </a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-success">
+                                <i class="fas fa-donate text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="small text-gray-500">December 7, 2019</div>
+                            $290.29 has been deposited into your account!
+                        </div>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="mr-3">
+                            <div class="icon-circle bg-warning">
+                                <i class="fas fa-exclamation-triangle text-white"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="small text-gray-500">December 2, 2019</div>
+                            Spending Alert: We've noticed unusually high spending for your account.
+                        </div>
+                    </a>
+                    <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                 </div>
-                {% endfor %}
-                {% endif %}
-                <div class="text-sm w-full cheltenham mx-auto px-3 my-2">
-                    <span> &copy; IGCMS.</span>
+            </li> {% endcomment %}
+
+            <!-- Nav Item - Messages -->
+            {% comment %} <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-envelope fa-fw"></i>
+                    <!-- Counter - Messages -->
+                    <span class="badge badge-danger badge-counter">7</span>
+                </a>
+                <!-- Dropdown - Messages -->
+                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                    aria-labelledby="messagesDropdown">
+                    <h6 class="dropdown-header">
+                        Message Center
+                    </h6>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="dropdown-list-image mr-3">
+                            <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                alt="...">
+                            <div class="status-indicator bg-success"></div>
+                        </div>
+                        <div class="font-weight-bold">
+                            <div class="text-truncate">Hi there! I am wondering if you can help me with a
+                                problem I've been having.</div>
+                            <div class="small text-gray-500">Emily Fowler · 58m</div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="dropdown-list-image mr-3">
+                            <img class="rounded-circle" src="img/undraw_profile_2.svg"
+                                alt="...">
+                            <div class="status-indicator"></div>
+                        </div>
+                        <div>
+                            <div class="text-truncate">I have the photos that you ordered last month, how
+                                would you like them sent to you?</div>
+                            <div class="small text-gray-500">Jae Chun · 1d</div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="dropdown-list-image mr-3">
+                            <img class="rounded-circle" src="img/undraw_profile_3.svg"
+                                alt="...">
+                            <div class="status-indicator bg-warning"></div>
+                        </div>
+                        <div>
+                            <div class="text-truncate">Last month's report looks great, I am very happy with
+                                the progress so far, keep up the good work!</div>
+                            <div class="small text-gray-500">Morgan Alvarez · 2d</div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center" href="#">
+                        <div class="dropdown-list-image mr-3">
+                            <img class="rounded-circle" src=""
+                                alt="...">
+                            <div class="status-indicator bg-success"></div>
+                        </div>
+                        <div>
+                            <div class="text-truncate">Am I a good boy? The reason I ask is because someone
+                                told me that people say this to all dogs, even if they aren't good...</div>
+                            <div class="small text-gray-500">Chicken the Dog · 2w</div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                </div>
+            </li> {% endcomment %}
+
+            <!-- Nav Item - User Information -->
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="mr-2 d-none !text-base d-lg-inline text-gray-600 small">{{ user.get_full_name }}</span>
+                    <img class="img-profile !bg-slate-300 rounded-circle"
+                        src="{% if user.picture %}{{user.picture.url}}{% else %}{%static "img/undraw_profile.svg" %}{% endif %}">
+                </a>
+                <!-- Dropdown - User Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in user-profile-menu"
+                    aria-labelledby="userDropdown">
+                    <div class="d-flex mb-2 justify-content-center align-items-center">
+                        <img src="{% if user.picture %}{{user.picture.url}}{% else %}{% static "img/undraw_profile.svg" %}{% endif %}" class="img-profile rounded-circle" style="width: 100px; height: 100px;">
+                        <div class="ml-2 mr-1">
+                            <h5 class="text-center">{{ user.get_full_name }}</h5>
+                            {%if user.is_faculty %}
+                                <p class="text-center">{{ user.faculty.subject }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="text-center">{{ user.email }}</p>
+
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-danger"></i>
+                        Logout
+                    </a>
+                </div>
+            </li>
+
+        </ul>
+
+    </nav>
+    <div id="wrapper">
+        <div class="!border-r !border-slate-300" >
+        <ul style="border: 0 1px 0 0 solid #e5e6ec;" class="navbar-nav !mt-4 sidebar accordion" id="accordionSidebar">
+            <li class="nav-item">
+                <a class="nav-link !px-4 !py-3 !mx-1 !w-[calc(100%-8px)] hover:!bg-slate-950 !rounded-md hover:!text-white" href="/">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span class="!text-base !ml-2 dark:text-gray-100 text-gray-800 !font-semibold truncate">Dashboard</span>
+                </a>
+            </li>
+            {% block sidebar %}
+
+            {% endblock %}
+            <li class="nav-item">
+                <a class="nav-link !px-4 !py-3 !mx-1 !w-[calc(100%-8px)] hover:!bg-slate-950 !rounded-md hover:!text-white" href="/students">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span class="!text-base !ml-2 dark:text-gray-100 text-gray-800 !font-semibold truncate">Students List</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link !px-4 !py-3 !mx-1 !w-[calc(100%-8px)] hover:!bg-slate-950 !rounded-md hover:!text-white" href="/em--">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span class="!text-base !ml-2 dark:text-gray-100 text-gray-800 !font-semibold truncate">Send Emails</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link !px-4 !py-3 !mx-1 !w-[calc(100%-8px)] hover:!bg-slate-950 !rounded-md hover:!text-white" href="/ad--">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span class="!text-base !ml-2 dark:text-gray-100 text-gray-800 !font-semibold truncate">Add Assignment</span>
+                </a>
+            </li>
+        </ul>
+        </div>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <div id="content" class="bg-white">
+
+                <div class="container-fluid py-4 bg-white">
+
+                    {% block content %}
+
+                    {% endblock %}
+
                 </div>
             </div>
-        </sidebar>
-        <section class="left-56 main-scrollbar p-4 rounded-md top-16 bottom-4 h-[calc(100vh-80px)] overflow-y-auto overflow-x-auto bg-white mr-4 relative w-[calc(100%-240px)]">
-            <section class="">
-                {% block content %}
-                {% endblock %}
-            </section>
-        </section>
-    </main>
+
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; IgCMS 2024</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a> 
+
+    <!-- Logout Modal-->
+     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{% static "public/js/vendor/jquery.min.js" %}"></script>
+    <script src="{% static "public/js/vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="{% static "public/js/vendor/jquery-easing/jquery.easing.min.js" %}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{% static "public/js/admin.min.js" %}"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.js"></script>
+    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> {% endcomment %}
+    {% comment %} <script src="https://code.jquery.com/jquery-3.7.1.js"></script> {% endcomment %}
+    <script> 
+        new DataTable('#data-students');
+      </script>
 
 </body>
 

@@ -1,0 +1,12 @@
+{% extends "dash-layout.html" %}
+
+{% block sidebar%}
+    {% if user.is_faculty %}
+        <li class="nav-item">
+            <a class="nav-link !px-4 !py-3 !mx-1 !w-[calc(100%-8px)] hover:!bg-slate-950 !rounded-md hover:!text-white" href="/teachers">
+                <i class="fas fa-graduation-cap"></i>
+                <span class="!text-base !ml-2 dark:text-gray-100 text-gray-800 !font-semibold truncate">Teachers List</span>
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}

@@ -2,35 +2,37 @@
 
 {% block content %}
 
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  Age
-                </th>
-                <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  Grade
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr>
-                <td class="px-6 py-4 whitespace-no-wrap">
-                  John Doe
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap">
-                  20
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap">
-                  A
-                </td>
-              </tr>
-              <!-- More student rows go here -->
-            </tbody>
-          </table>
-
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-trash"></i>
+          <p class="card-text">Add Student</p>
+        </div>
+        <a href="#" class="stretched-link"></a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-trash"></i>
+          <p class="card-text">Add Something</p>
+        </div>
+        <a href="#" class="stretched-link"></a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-trash"></i>
+          <p class="card-text">Add Nothing</p>
+        </div>
+        <a href="#" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+</div>
+  
 
 {% endblock %}

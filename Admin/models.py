@@ -15,7 +15,7 @@ class AuthUser(AbstractBaseUser, PermissionsMixin):
         error_messages={
             'unique': _("A user with that email already exists."),
         },)
-    first_name = models.CharField(_('first name'), max_length=30)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
@@ -24,12 +24,12 @@ class AuthUser(AbstractBaseUser, PermissionsMixin):
     is_hod = models.BooleanField(default=False)
     is_faculty = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
-    picture = models.ImageField(upload_to='images/profile_pictures')
+    picture = models.ImageField(upload_to='images/profile_pictures', null=True, blank=True)
     
     objects = UserManager()
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['']
+    REQUIRED_FIELDS = ['first_name']
     
     class Meta:
         db_table = 'auth_user'
@@ -57,16 +57,13 @@ class HOD(models.Model):
 
 class Faculty(models.Model):
     user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
-    department = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=15)
-
+    subject = models.CharField(max_length=100, null=True, blank=True)
+    mobile = models.CharField(max_length=15, null=True, blank=True)
 
 class Student(models.Model):
     user = models.OneToOneField(AuthUser, on_delete=models.CASCADE)
     roll_number = models.CharField(max_length=20, unique=True)
-    department = models.CharField(max_length=100)
-    semester = models.IntegerField()
-    dob = models.DateField()
-    mobile = models.CharField(max_length=15)
-    
-    
+    father_name = models.CharField(max_length=100, null=True, blank=True)
+    mother_name = models.CharField(max_length=100, null=True, blank=True)
+    dob = models.DateField( null=True, blank=True)
+    mobile = models.CharField(max_length=15, null=True, blank=True)
