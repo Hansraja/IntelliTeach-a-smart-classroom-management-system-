@@ -1,3 +1,96 @@
 from django.db import models
-
+from Admin.models import AuthUser, Faculty, Student
 # Create your models here.
+
+class Teacher_Messages(models.Model):
+    admin = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    teacher = models.ManyToManyField(Faculty, related_name='teacher_messages')
+    message = models.CharField(max_length=10000, blank=True, null=True)
+    tag = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'teacher_messages'
+
+    def __str__(self):
+        return self.message
+    
+
+class Student_Notice(models.Model):
+    admin = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_messages', null=True, blank=True)
+    message = models.CharField(max_length=10000, blank=True, null=True)
+    tag = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'student_messages'
+
+    def __str__(self):
+        return self.message
+    
+class Student_Marks(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_marks', null=True, blank=True)
+    mst1 = models.IntegerField(blank=True, null=True)
+    mst2 = models.IntegerField(blank=True, null=True)
+    assignment = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'student_marks'
+
+    def __str__(self):
+        return self.student.user.first_name + ' ' + self.student.user.last_name + ' marks' # type: ignore
+    
+class Time_Table(models.Model):
+    admin = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teacher_timetable', null=True, blank=True)
+    day = models.CharField(max_length=255, blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    time_from = models.TimeField(blank=True, null=True)
+    time_to = models.TimeField(blank=True, null=True)
+    subject = models.CharField(max_length=255, blank=True, null=True)
+    class_name = models.CharField(max_length=255, blank=True, null=True)
+    section = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'time_table'
+
+    def __str__(self):
+        return self.teacher.user.first_name + ' ' + self.teacher.user.last_name + ' timetable' # type: ignore
+
+    @staticmethod
+    def get_table_structure():
+        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        table_structure = {}
+        for day in days:
+            classes = Time_Table.objects.filter(day=day)
+            table_structure[day] = [c.class_name for c in classes]
+        return table_structure
+    
+
+class Attendance(models.Model):
+    teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teacher_attendance', null=True, blank=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_attendance', null=True, blank=True)
+    time = models.ForeignKey(Time_Table, on_delete=models.CASCADE, related_name='time_attendance', null=True, blank=True)
+    status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'attendance'
+
+    def __str__(self):
+        return self.teacher.user.first_name + ' ' + self.teacher.user.last_name + ' attendance' # type: ignore        def calculate_student_attendance_percentage(student_id):
+
+    def calculate_student_attendance_percentage(self, student_id): 
+        total_classes = Time_Table.objects.count()
+        attended_classes = Attendance.objects.filter(student_id=student_id, status=True).count()
+        attendance_percentage = (attended_classes / total_classes) * 100
+        return attendance_percentage

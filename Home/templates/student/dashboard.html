@@ -1,0 +1,38 @@
+{% extends "student_dashboard.html" %}
+
+{% block content %}
+
+<div class="flex">
+    <div class="w-1/4 bg-gray-200 p-4">
+        <!-- Noticeboard -->
+        <div class="bg-white min-h-96 rounded-lg shadow-lg p-4">
+            <h2 class="text-xl font-bold mb-4">Noticeboard</h2>
+            <!-- Add your noticeboard content here -->
+        </div>
+    </div>
+    <div class="w-3/4 p-4">
+        <!-- Boxes -->
+        <div class="flex justify-between">
+            <div class="w-1/3 bg-white rounded-lg shadow-lg p-4">
+                <div class="flex items-center justify-center h-24">
+                    <i class="text-4xl text-blue-500 fas fa-icon"></i>
+                </div>
+                <p class="text-center text-gray-600">Box 1</p>
+            </div>
+            <div class="w-1/3 bg-white rounded-lg shadow-lg p-4">
+                <div class="flex items-center justify-center h-24">
+                    <i class="text-4xl text-green-500 fas fa-icon"></i>
+                </div>
+                <p class="text-center text-gray-600">Box 2</p>
+            </div>
+            <div class="w-1/3 bg-white rounded-lg shadow-lg p-4">
+                <div class="flex items-center justify-center h-24">
+                    <i class="text-4xl text-red-500 fas fa-icon"></i>
+                </div>
+                <p class="text-center text-gray-600">Box 3</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

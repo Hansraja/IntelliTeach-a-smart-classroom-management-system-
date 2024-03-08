@@ -11,22 +11,23 @@ def student(request, context={}):
         last_name = request.POST.get('last_name', None)
         father_name = request.POST.get('father_name', None)
         email = request.POST.get('email', None)
+        password = request.POST.get('password', None)
         mobile = request.POST.get('mobile', None)
         roll_number = request.POST.get('roll_number', None)
-        image = request.FILES.get('image', None)  # Use FILES instead of POST to get the image file
+        image = request.FILES.get('image', None)
         dob = request.POST.get('dob', None)
         dob_date = datetime.datetime.strptime(dob, "%Y-%m-%d").date()
         dob_formatted = dob_date.strftime("%Y-%m-%d")
-        print(first_name, last_name, email, roll_number, image, dob_formatted , 'student data', request.POST)
         try:
             user = AuthUser.objects.create(email=email, first_name=first_name, last_name=last_name, is_student=True, picture=image)
+            user.set_password(password)
             student = Student.objects.create(user=user, roll_number=roll_number, dob=dob_formatted, father_name=father_name, mobile=mobile)
+            student.send_welcome_email(password)
         except ValidationError as e:
             try:
                 user.delete() if user else None
             except UnboundLocalError as e:
                 pass
-            print(e, 'got error while adding student')
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
             try:
@@ -36,7 +37,6 @@ def student(request, context={}):
             students = Student.objects.all()
             context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)
-        print(student, 'student added successfully!')
         students = Student.objects.all()
         context = {'title': 'Teacher', 'students': students, **context}
         return render(request, 'student/index.html', context=context)
@@ -70,14 +70,11 @@ def update_student(request):
             student.user.save()
             student.save()
         except ValidationError as e:
-            print(e, 'got error while updating student')
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
-            print(e)
             students = Student.objects.all()
             context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)
-        print(student, 'student updated successfully!')
         students = Student.objects.all()
         context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'Student updated successfully!', 'tag': 'success'}]}
         return render(request, 'student/index.html', context=context)
@@ -88,18 +85,16 @@ def update_student(request):
 def delete_student(request):
     if request.method == 'POST':
         student_id = request.POST.get('id', None)
-        print(student_id, 'student data', request.POST)
         try:
             student = Student.objects.get(id=student_id)
+            student.user.delete_account_email()
             student.user.delete()
         except ValidationError as e:
-            print(e, 'got error while deleting student')
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
             students = Student.objects.all()
             context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)
-        print(student, 'student deleted successfully!')
         students = Student.objects.all()
         context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'Student deleted successfully!', 'tag': 'success'}]}
         return render(request, 'student/index.html', context=context)
@@ -109,6 +104,11 @@ def delete_student(request):
 
 
 def student_info(request, id):
-    student = Student.objects.get(id=id)
-    context = {'title': 'Teacher', 'student': student}
-    return render(request, 'student/student-info.html', context=context)
+    try:
+        student = Student.objects.get(roll_number=id)
+        context = {'title': 'Teacher', 'student': student}
+        return render(request, 'student/single.html', context=context)
+    except Exception as e:
+        students = Student.objects.all()
+        context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'Student not found!', 'tag': 'danger'}]}
+        return render(request, 'student/index.html', context=context)

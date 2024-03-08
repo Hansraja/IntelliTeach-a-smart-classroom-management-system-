@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import AuthUser
+import json
 
 def hod_login(request):
     if request.method == 'POST':
@@ -48,3 +50,33 @@ def student_login(request):
 
 def admin_dashboard(request):
     return render(request, 'admin.html')
+
+
+def update_password(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            if request.user.is_faculty or request.user.is_hod : # type: ignore
+                    try:
+                        data = request.body.decode('utf-8')
+                        data = json.loads(data)
+                        _id = data.get('_id', None)
+                        user = AuthUser.objects.get(id=int(_id))
+                        password = data.get('password', None)
+                        confirm_password = data.get('confirm_password', None)
+                        if password:
+                            if password == confirm_password:
+                                user.set_password(password)
+                                user.save()
+                                return JsonResponse({'success': True, 'message': 'Password updated successfully'})
+                            else:
+                                return JsonResponse({'success': False, 'message': 'New password and confirm password do not match'})
+                        else:
+                            return JsonResponse({'success': False, 'message': 'Please enter a valid password'})
+                    except Exception as e:
+                        print(e)
+                        return JsonResponse({'success': False, 'message': 'An error occurred while updating password'})
+            else:
+                return JsonResponse({'success': False, 'message': 'You are not authorized to perform this action'})
+        else:
+            return JsonResponse({'success': False, 'message': 'You are not logged in'})
+    return JsonResponse({'success': False, 'message': 'Invalid request'})

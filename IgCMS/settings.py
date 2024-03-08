@@ -4,6 +4,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+APP_NAME = "IgCMS"
+COLLEGE_NAME = 'Ik Gujral College'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5tm(^75*kg(d6=f&nn91-esky50y#0zuqzd87dp^(l@bl^4n5c'
@@ -36,6 +38,12 @@ INSTALLED_APPS += [
 AUTH_USER_MODEL = 'Admin.AuthUser'
 # AUTHENTICATION_BACKENDS = ['Admin.backends.AuthBackend']
 
+EMAIL_HOST = 'mail.vizion2050.in'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'igcms@vizion2050.in'
+EMAIL_HOST_PASSWORD = 'IgCMS@r#99'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

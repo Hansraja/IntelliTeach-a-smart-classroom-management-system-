@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .utils import menu
 from Admin.models import AuthUser, Faculty
+import datetime
 
 title = 'Faculty Dashboard'
 
@@ -24,6 +25,37 @@ def add_student(request):
     return render(request, 'faculty/add_students.html', context=context)
 
 def teachers_list(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name', None)
+        last_name = request.POST.get('last_name', None)
+        subject = request.POST.get('subject', None)
+        email = request.POST.get('email', None)
+        password = request.POST.get('password', None)
+        mobile = request.POST.get('mobile', None)
+        image = request.FILES.get('image', None) 
+        try:
+            user = AuthUser.objects.create(email=email, first_name=first_name, last_name=last_name, is_faculty=True, picture=image)
+            user.set_password(password)
+            user.save()
+            teacher = Faculty.objects.create(user=user, subject=subject, mobile=mobile)
+            teacher.send_welcome_email(password)
+        except ValidationError as e:
+            try:
+                user.delete() if user else None
+            except UnboundLocalError as e:
+                pass
+            return HttpResponseServerError("Something went wrong, try again.")
+        except Exception as e:
+            try:
+                user.delete() if user else None
+            except UnboundLocalError as e:
+                pass
+            teachers = Faculty.objects.all()
+            context = {'title': 'Teacher', 'teachers': teachers, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
+            return render(request, 'teachers.html', context=context)
+        teachers = Faculty.objects.all()
+        context = {'title': 'Teacher', 'teachers': teachers}
+        return render(request, 'teachers.html', context=context)
     data = Faculty.objects.all()
     context = {'title': title,'teachers': data}
     return render(request, 'teachers.html', context=context)
@@ -34,6 +66,7 @@ def update_teacher(request):
         _id = request.POST.get('id', None)
         first_name = request.POST.get('first_name', None)
         last_name = request.POST.get('last_name', None)
+        password = request.POST.get('password', None)
         subject = request.POST.get('subject', None)
         mobile = request.POST.get('mobile', None)
         email = request.POST.get('email', None)
@@ -46,17 +79,17 @@ def update_teacher(request):
             teacher.subject = subject if subject else teacher.subject
             teacher.user.picture = image if image else teacher.user.picture # type: ignore
             teacher.mobile = mobile if mobile else teacher.mobile
+            if password:
+                teacher.user.set_password(password)
+                teacher.user.update_password_email(password)
             teacher.user.save()
             teacher.save()
         except ValidationError as e:
-            print(e, 'got error while updating teacher')
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
-            print(e)
             teachers = Faculty.objects.all()
             context = {'title': 'Teacher', 'teachers': teachers, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'teachers.html', context=context)
-        print(teacher, 'teacher updated successfully!')
         teachers = Faculty.objects.all()
         context = {'title': 'Teacher', 'teachers': teachers, 'messages': [{'message': 'Teacher updated successfully!', 'tag': 'success'}]}
         return render(request, 'teachers.html', context=context)
@@ -70,24 +103,17 @@ def delete_teacher(request):
         print(_id, 'teacher data', request.POST)
         try:
             teacher = Faculty.objects.get(id=_id)
+            teacher.user.delete_account_email()
             teacher.user.delete()
         except ValidationError as e:
-            print(e, 'got error while deleting teacher')
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
             teachers = Faculty.objects.all()
             context = {'title': 'Teacher', 'teachers': teachers, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'teachers.html', context=context)
-        print(teacher, 'teacher deleted successfully!')
         teachers = Faculty.objects.all()
         context = {'title': 'Teacher', 'teachers': teachers, 'messages': [{'message': 'Teacher deleted successfully!', 'tag': 'success'}]}
         return render(request, 'teachers.html', context=context)
     teachers = Faculty.objects.all()
     context = {'title': 'Teacher', 'teachers': teachers}
     return render(request, 'teachers.html', context=context)
-
-
-# def teacher_info(request, id):
-#     teacher = Faculty.objects.get(id=id)
-#     context = {'title': 'Teacher', 'teacher': teacher}
-#     return render(request, 'teacher/teacher-info.html', context=context)

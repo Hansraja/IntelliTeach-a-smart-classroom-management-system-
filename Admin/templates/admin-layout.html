@@ -1,12 +1,98 @@
 {% extends "dash-layout.html" %}
 
-{% block sidebar%}
-    {% if user.is_faculty %}
-        <li class="nav-item">
-            <a class="nav-link !px-4 !py-3 !mx-1 !w-[calc(100%-8px)] hover:!bg-slate-950 !rounded-md hover:!text-white" href="/teachers">
-                <i class="fas fa-graduation-cap"></i>
-                <span class="!text-base !ml-2 dark:text-gray-100 text-gray-800 !font-semibold truncate">Teachers List</span>
-            </a>
-        </li>
-    {% endif %}
+{% block layout %}
+
+    <aside id="sidebar" class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-5 font-normal duration-75 lg:flex transition-width" aria-label="Sidebar">
+        <div class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
+            <div
+            class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+            <ul class="pb-2 space-y-2">
+                <li>
+                    <form action="#" method="GET" class="lg:hidden">
+                        <label for="mobile-search" class="sr-only">Search</label>
+                        <div class="relative">
+                            <div
+                                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <input type="text" name="email" id="mobile-search"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-200 dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Search">
+                        </div>
+                    </form>
+                </li>
+                <li>
+                    <a href="/"
+                        class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
+                        <svg class="w-6 h-6 !text-gray-700 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                            <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                        </svg>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                {% if user.is_hod %}
+                    <li>
+                        <a href="/teachers"
+                            class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                            aria-controls="dropdown-layouts" data-collapse-toggle="dropdown-layouts">
+                            <svg class="flex-shrink-0 w-6 h-6 !text-gray-800 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                                fill="currentColor" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H53.4a7.9,7.9,0,0,0,7.2-4.6,48.1,48.1,0,0,1,86.8,0,7.9,7.9,0,0,0,7.2,4.6H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM104,168a32,32,0,1,1,32-32A32.1,32.1,0,0,1,104,168Zm112,32H159.4a63.7,63.7,0,0,0-13.1-16H192a8,8,0,0,0,8-8V80a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v96a8,8,0,0,0,6,7.7A64.2,64.2,0,0,0,48.6,200H40V56H216Z"/>
+                            </svg>
+                            <span class="flex-1 ml-3 text-left whitespace-nowrap">Teachers List</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% url "student" %}"
+                        class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                        aria-controls="dropdown-layouts" data-collapse-toggle="dropdown-layouts">
+                        <svg class="flex-shrink-0 w-6 h-6 !text-gray-700 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                            fill="currentColor" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><line x1="32" y1="64" x2="32" y2="144" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M54.2,216a88.1,88.1,0,0,1,147.6,0" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><polygon points="224 64 128 96 32 64 128 32 224 64" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M169.3,82.2a56,56,0,1,1-82.6,0" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/>
+                        </svg>
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap">Students List</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/" class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700
+                     ">
+                      <svg class="w-6 h-6 !text-gray-700 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd" d="M8.34 1.804A1 1 0 019.32 1h1.36a1 1 0 01.98.804l.295 1.473c.497.144.971.342 1.416.587l1.25-.834a1 1 0 011.262.125l.962.962a1 1 0 01.125 1.262l-.834 1.25c.245.445.443.919.587 1.416l1.473.294a1 1 0 01.804.98v1.361a1 1 0 01-.804.98l-1.473.295a6.95 6.95 0 01-.587 1.416l.834 1.25a1 1 0 01-.125 1.262l-.962.962a1 1 0 01-1.262.125l-1.25-.834a6.953 6.953 0 01-1.416.587l-.294 1.473a1 1 0 01-.98.804H9.32a1 1 0 01-.98-.804l-.295-1.473a6.957 6.957 0 01-1.416-.587l-1.25.834a1 1 0 01-1.262-.125l-.962-.962a1 1 0 01-.125-1.262l.834-1.25a6.957 6.957 0 01-.587-1.416l-1.473-.294A1 1 0 011 10.68V9.32a1 1 0 01.804-.98l1.473-.295c.144-.497.342-.971.587-1.416l-.834-1.25a1 1 0 01.125-1.262l.962-.962A1 1 0 015.38 3.03l1.25.834a6.957 6.957 0 011.416-.587l.294-1.473zM13 10a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      </svg>
+                      <span class="ml-3" >Add Assignment</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="pt-2 space-y-2">
+              <a href="https://github.com/themesberg/flowbite-admin-dashboard/issues" target="_blank" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
+                <svg class="flex-shrink-0 w-6 h-6 !text-gray-700 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z" clip-rule="evenodd"></path></svg>
+                <span class="ml-3" >Ask Question</span>
+              </a>
+            </div>
+            </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="fixed inset-0 z-10 hidden bg-gray-900/50 dark:bg-gray-900/90" id="sidebarBackdrop"></div>
+
+    <div id="main-content" class="relative w-full p-4 h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900">
+    <main>
+        {%block content%}
+
+        {% endblock %}
+    </main>
+
+    </div>
+    
 {% endblock %}

@@ -141,14 +141,6 @@ body {
     align-items: center !important;
 }
 
-@media (min-width: 768px) {
-    .user-profile-menu {
-        right: 10px !important;
-        position: fixed !important;
-        width: auto !important;
-        left: auto !important;
-        top: 70px !important;
-        overflow: hidden !important;
-        padding: 10px !important;
-    }
+input {
+    border-radius: 5px !important;
 }
