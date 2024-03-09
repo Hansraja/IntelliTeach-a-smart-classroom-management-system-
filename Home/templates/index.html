@@ -10,12 +10,14 @@
 <section class="auth-main text-white dark:text-white h-screen overflow-hidden">
     {% comment %} style="background-image: url({% static "img/bg-auth-igcms.png" %}); {% endcomment %}
     <div class="auth-main-wrapper relative">
-        <div class="auth-container rounded-xl shadow-md">
-            <div class="w-full h-full space-x-2 items-center flex justify-between">
-                <div
-                    class="w-full md:w-1/2 h-full rounded-l-xl p-4">
-                    <div class="w-full h-full">
-                        {% comment %} style="background-image: url({% static "img/bg-auth-wrapp.png" %})" {% endcomment %}
+        <div class="rounded-xl h-[calc(100%-80px)] shadow-md">
+                <div class="w-[calc(100%-80px)] flex flex-col justify-start overflow-y-auto items-center mx-5 sm:w-[400px] max-w-[500px] h-full p-4">
+                    <div class="w-full mb-6 flex justify-center items-center space-x-3">
+                        <img src="{% static "img/IntelliTeach.png" %}" alt="auth-bg" class="w-10 h-10 rounded-full">
+                        <h1 class="text-2xl stymie">IntelliTeach</h1> 
+                    </div>
+
+                    <div class="w-full mb-6">
                         <h1 id='welTxt' class="text-2xl stymie"></h1>
                         <p id='logPtxt' class="text-gray-600"></p>
                         <script>
@@ -45,9 +47,7 @@
                             typeWriter2();
                         </script>
                     </div>
-                </div>
-                <div class="w-1/2 h-full p-4">
-                    <div class="mx-5">
+                    <div class="">
                         <div class="border-2 px-1 py-1 rounded-full w-full backdrop-blur-3xl">
                             <div class="flex justify-between">
                                 <button id="switchStudent"
@@ -56,7 +56,7 @@
                                 </button>
                                 <button id="switchTeacher"
                                     class="w-1/2 karnak font-medium rounded-full px-4 py-1 text-white">
-                                    Faculty
+                                    Teacher/Admin
                                 </button>
                                 <script>
                                     let switchStudent = document.getElementById("switchStudent");
@@ -234,7 +234,6 @@
                             </script>
                     </div>
                 </div>
-            </div>
         </div>
         <div id="copyrightBox"
             class="absolute -bottom-10 px-5 py-1.5 rounded-t-lg transition-all duration-1000">
@@ -246,7 +245,7 @@
                 }, 2000)
             </script>
             <div class="">
-                <p class="text-gray-950 font-semibold text-sm">© 2024 IgCMS. All rights reserved.</p>
+                <p class="text-gray-300 font-semibold text-sm">© 2024 IgCMS. All rights reserved.</p>
             </div>
         </div>
     </div>

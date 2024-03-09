@@ -17,7 +17,7 @@ def home_login(request):
         else:
             return redirect('admin_dashboard')
         
-    title = 'Home'
+    title = f'Login to {settings.APP_NAME}'
     if request.method == 'POST': # type: ignore
         password = request.POST['password'] # type: ignore
         selected = request.POST.get('selected', None)  # type: ignore

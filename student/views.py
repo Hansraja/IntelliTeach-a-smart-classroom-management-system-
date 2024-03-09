@@ -3,6 +3,9 @@ from django.http import HttpResponseServerError
 from Admin.models import Student, AuthUser
 from django.core.exceptions import ValidationError
 import datetime
+from django.contrib.auth.decorators import login_required
+from teachers.models import AssignMents, Important_Topics
+from django.conf import settings
 
 
 def student(request, context={}):
@@ -35,14 +38,14 @@ def student(request, context={}):
             except UnboundLocalError as e:
                 pass
             students = Student.objects.all()
-            context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
+            context = {'title': f'Students - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)
         students = Student.objects.all()
-        context = {'title': 'Teacher', 'students': students, **context}
+        context = {'title': f'Students - {settings.APP_NAME}', 'students': students, **context}
         return render(request, 'student/index.html', context=context)
 
     students = Student.objects.all()
-    context = {'title': 'Teacher', 'students': students}
+    context = {'title': f'Students - {settings.APP_NAME}', 'students': students}
     return render(request, 'student/index.html', context=context)
 
 
@@ -73,13 +76,13 @@ def update_student(request):
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
             students = Student.objects.all()
-            context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
+            context = {'title': f'Students - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)
         students = Student.objects.all()
-        context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'Student updated successfully!', 'tag': 'success'}]}
+        context = {'title': f'Students - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'Student updated successfully!', 'tag': 'success'}]}
         return render(request, 'student/index.html', context=context)
     students = Student.objects.all()
-    context = {'title': 'Teacher', 'students': students}
+    context = {'title': f'Students - {settings.APP_NAME}', 'students': students}
     return render(request, 'student/index.html', context=context)
 
 def delete_student(request):
@@ -93,22 +96,49 @@ def delete_student(request):
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
             students = Student.objects.all()
-            context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
+            context = {'title': f'Students - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)
         students = Student.objects.all()
-        context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'Student deleted successfully!', 'tag': 'success'}]}
+        context = {'title': f'Students - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'Student deleted successfully!', 'tag': 'success'}]}
         return render(request, 'student/index.html', context=context)
     students = Student.objects.all()
-    context = {'title': 'Teacher', 'students': students}
+    context = {'title': f'Students - {settings.APP_NAME}', 'students': students}
     return render(request, 'student/index.html', context=context)
 
 
 def student_info(request, id):
     try:
         student = Student.objects.get(roll_number=id)
-        context = {'title': 'Teacher', 'student': student}
+        context = {'title': f'Students - {settings.APP_NAME}', 'student': student}
         return render(request, 'student/single.html', context=context)
     except Exception as e:
         students = Student.objects.all()
-        context = {'title': 'Teacher', 'students': students, 'messages': [{'message': 'Student not found!', 'tag': 'danger'}]}
+        context = {'title': f'Student - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'Student not found!', 'tag': 'danger'}]}
         return render(request, 'student/index.html', context=context)
+
+@login_required(login_url='/')
+def student_assignments(request):
+    if request.user.is_student and request.user.student:
+        assignments = AssignMents.objects.all()
+        context = {'title': f'Assignments - {settings.APP_NAME}', 'assignments': assignments}
+        return render(request, 'assignments.html', context=context)
+    return redirect('/')
+
+@login_required(login_url='/')
+def student_assignments_view(request, id):
+    if request.user.is_student and request.user.student:
+        try:
+            assignment = AssignMents.objects.get(id=int(id))
+            context = {'title': f'Assignment - {settings.APP_NAME}', 'assignment': assignment}
+            return render(request, 'single-assignment.html', context=context)
+        except Exception as e:
+            return redirect('/assignments/')
+    return redirect('/')
+
+@login_required
+def student_topics(request):
+    if request.user.is_student and request.user.student:
+        topics = Important_Topics.objects.all()
+        context = {'title': f'Important Topics - {settings.APP_NAME}', 'topics': topics}
+        return render(request, 'topics.html', context=context)
+    return redirect('/')

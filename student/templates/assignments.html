@@ -1,0 +1,51 @@
+{% extends 'student_dashboard.html' %}
+
+{% load static %}
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tag }} alert-dismissible fade show" role="alert">
+  {{ message.message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="text-base">Assignments</h2>
+</div>
+<div class="table-responsive">
+  <table id="data-assignments" class="table dt-responsive table-hover table-bordered nowrap w-100">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Teacher</th>
+        <th scope="col">Description</th>
+        <th scope="col">Questions</th>
+        <th scope="col">Due Date</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for assignment in assignments %}
+      <tr class="rb-table-row" id="assignment-{{ assignment.id }}">
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{ assignment.title }}</td>
+        <td>{{ assignment.teacher.user.get_full_name }}</td>
+        <td>{% if assignment.description %}{{ assignment.description }}{% else %}<div class="__">_</div>{% endif %}</td>
+        <td>{{ assignment.question_length }}</td>
+        <td>{{ assignment.due_date }}</td>
+        <td>
+          <button type="button" class="btn btn-info btn-sm mr-2 edit-btn"><a href="{% url "assignments-student-view" assignment.id %}"> View </a></button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script> 
+    new DataTable(' #data-assignments'); </script>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'student_dashboard.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-2xl font-extraBold mb-5">Assignment Details</h1>
+                <h2 class="mb-2 text-xl font-bold">{{ assignment.title }}</h2>
+                <p class="mb-3 text-sm ">{{ assignment.description }}</p>
+                <div class="flex space-x-3 items-center">
+                <p class="mb-4 text-sm font-semibold">Due Date: {{ assignment.due_date }}</p>
+                <p class="mb-4 text-sm font-semibold">Subject: {{ assignment.teacher.subject }}</p>
+                <p class="mb-4 text-sm font-semibold">Teacher: {{ assignment.teacher.user.get_full_name }}</p>
+                </div>
+                
+                {% for question in assignment.questions.all %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="card-title mb-2 text-lg font-semibold">{{ question.question }}</h4>
+                            <p class="card-text mb-4 text-sm ">{{ question.description }}</p>
+                            {% if question.attachments %}
+                                <a href="{{ question.attachments.url }}" class="btn btn-primary" target="_blank">Download Attachment</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                {% if not assignment.questions.all %}
+                    <p class="lead">No questions available for this assignment.</p>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+{% endblock %}

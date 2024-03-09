@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import AuthUser
 import json
+from django.conf import settings
 
 def hod_login(request):
     if request.method == 'POST':
@@ -29,9 +30,9 @@ def faculty_login(request):
         if user is not None and user.is_faculty: # type: ignore
             login(request, user)
             return redirect('faculty_dashboard')
-        else:
-            pass
-
+        elif user is not None  and user.is_hod: # type: ignore
+            login(request, user)
+            return redirect('admin_dashboard')
     return render(request, 'index.html')
 
 def student_login(request):
@@ -49,6 +50,7 @@ def student_login(request):
 
 
 def admin_dashboard(request):
+    context = {'title': f"Admin - {settings.APP_NAME}"}
     return render(request, 'admin.html')
 
 

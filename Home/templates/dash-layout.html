@@ -275,25 +275,36 @@
                             </div>
                         </a>
                         <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in user-profile-menu"
+                        <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in user-profile-menu !-left-20"
                             aria-labelledby="userDropdown">
-                            <div class="px-2 py-3" role="none">
+                            <div class="px-6 py-8" role="none">
                                 <div class="flex mb-1 justify-start space-x-2 items-center">
                                     <div class="">
                                         <img src="{% if user.picture %}{{user.picture.url}}{% else %}{% static "img/undraw_profile.svg" %}{% endif %}" class="rounded-full w-10 h-10" style="width: 40px; height: 40px;">
                                     </div>
                                     <div class="flex flex-col justify-center" >
-                                        <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                        <p class="text-sm font-bold text-gray-900 dark:text-white" role="none">
                                             {{ user.get_full_name }}
                                         </p>
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                            {%if user.is_faculty %} {{ user.faculty.subject }} {% endif %}
+                                            {%if user.is_faculty %} {{ user.faculty.subject }} {% elif user.is_student %} Student {% else %} Admin {% endif %}
                                         </p>
                                     </div>
                                 </div>
-                                <p class="text-sm mt-2 font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                <p class="text-sm mt-2 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                                     {{ user.email }}
                                 </p>
+                                {%if user.is_student %}
+                                    <p class="text-sm mt-1 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                      Roll No: {{ user.student.roll_number }}
+                                    </p>
+                                    <p class="text-sm mt-1 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                       Father's Name: {{ user.student.father_name }}
+                                    </p>
+                                    <p class="text-sm mt-1 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                      DOB: {{ user.student.dob }}
+                                    </p>
+                                {% endif %}
                             </div>
                             <ul class="py-1" role="none">
                                 <li>
