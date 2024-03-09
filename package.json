@@ -6,7 +6,7 @@
     "build": "NODE_ENV=production && run-s build:webpack build:hugo",
     "build:hugo": "hugo --destination=./public",
     "build:webpack": "webpack --mode=production",
-    "build:styles": "npx tailwindcss -i input.css -o ./Home/static/public/css/base.css"
+    "build:styles": "npx tailwindcss -i input.css -o ./Home/static/public/css/base.css --watch"
   },
   "devDependencies": {
     "archiver": "^5.3.0",

@@ -4,8 +4,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-APP_NAME = "IgCMS"
-COLLEGE_NAME = 'Ik Gujral College'
+APP_NAME = "IntelliTeach"
+COLLEGE_NAME = 'IntelliTeach'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5tm(^75*kg(d6=f&nn91-esky50y#0zuqzd87dp^(l@bl^4n5c'

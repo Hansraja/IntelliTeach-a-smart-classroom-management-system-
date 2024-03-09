@@ -18,8 +18,10 @@ class Teacher_Messages(models.Model):
     
 
 class Student_Notice(models.Model):
-    admin = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    admin = models.ForeignKey(AuthUser, on_delete=models.SET_NULL, null=True, blank=True)
+    teacher = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_messages', null=True, blank=True)
+    title = models.CharField(max_length=500, blank=True, null=True)
     message = models.CharField(max_length=10000, blank=True, null=True)
     tag = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,17 +41,24 @@ class Student_Marks(models.Model):
     assignment = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    total = models.IntegerField(blank=True, null=True)
 
     class Meta:
         db_table = 'student_marks'
 
     def __str__(self):
-        return self.student.user.first_name + ' ' + self.student.user.last_name + ' marks' # type: ignore
+        return self.student.user.get_full_name + ' marks' # type: ignore
     
 class Time_Table(models.Model):
-    admin = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    DAY_CHOICES = (
+        ('Monday', 'Monday'),
+        ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'),
+        ('Friday', 'Friday'),
+    )
     teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teacher_timetable', null=True, blank=True)
-    day = models.CharField(max_length=255, blank=True, null=True)
+    day = models.CharField(max_length=255, choices=DAY_CHOICES, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     time_from = models.TimeField(blank=True, null=True)
     time_to = models.TimeField(blank=True, null=True)
