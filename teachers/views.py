@@ -1,23 +1,36 @@
 from django.forms import ValidationError
-from django.http import HttpResponseServerError, JsonResponse
+from django.http import HttpResponseForbidden, HttpResponseServerError, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+
+from Home.models import Student_Marks
 from .utils import menu
-from Admin.models import AuthUser, Faculty
+from Admin.models import AuthUser, Faculty, Student
 from teachers.models import AssignMents, Assignment_Questions, Important_Topics
+from student.models import Student_Queries_Answers, Student_Query
 import datetime
 import os
 from django.utils import timezone
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-title = 'Faculty Dashboard'
+title = 'Teachers Dashboard'
 
 @login_required(login_url='/')
 def facultyDashboard(request):
     if not request.user.is_faculty:
         return redirect('/')
-    return render(request, 'faculty_dashboard.html', {'title': f'Teachers Dahboard - {settings.APP_NAME}', 'menuItems': menu }) # type: ignore
+    
+    teacher = request.user.faculty # type: ignore
+    students = Student.objects.all()
+    student_data = []
+    for student in students:
+        student_marks_count = student.student_marks.filter(teacher__user__id=request.user.id).count()
+        student_data.append({'student': student, 'student_marks_count': student_marks_count})
+
+    queries = Student_Query.objects.all()
+    context = {'title': f'Teachers Dahboard - {settings.APP_NAME}', 'queries': queries,'student_data': student_data}
+    return render(request, 'faculty_dashboard.html',context=context) # type: ignore
 
 
 def faculty_Profile(request):
@@ -86,12 +99,17 @@ def update_teacher(request):
             teacher.mobile = mobile if mobile else teacher.mobile
             if password:
                 teacher.user.set_password(password)
-                teacher.user.update_password_email(password)
+                try:
+                    teacher.user.update_password_email(password)
+                except Exception as e:
+                    print(e)
+                    pass
             teacher.user.save()
             teacher.save()
         except ValidationError as e:
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
+            print(e)
             teachers = Faculty.objects.all()
             context = {'title': f'Update Teacher - {settings.APP_NAME}', 'teachers': teachers, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'teachers.html', context=context)
@@ -199,6 +217,17 @@ def delete_assignment(request):
     assignments = AssignMents.objects.all()
     context = {'title': 'Assignments', 'assignments': assignments}
     return render(request, 'assignments.html', context=context)
+
+@login_required(login_url='/')
+def delete_assignment_r(request, id):
+    if not request.user.is_faculty or not request.user.faculty:
+        return HttpResponseForbidden()
+    try:
+        assignment = AssignMents.objects.get(id=int(id))
+        assignment.delete() if assignment else None
+        return redirect('assignments')
+    except Exception as e:
+        return HttpResponseServerError("Something Went Wrong")
 
 @login_required(login_url='/')
 def single_assignment(request, id):
@@ -318,3 +347,38 @@ def delete_topic(request, id):
             print(e, 'error')
             return HttpResponseServerError("Something went wrong, try again.")
     return JsonResponse({'message': 'You are not authorized to perform this action', 'success': False}, status=403)
+
+def view_query(request, id):
+    template = 'student_dashboard.html' if request.user.is_student else 'admin-layout.html'
+    data = Student_Query.objects.get(pk=int(id)) if request.user.is_faculty else Student_Query.objects.get(pk=int(id), student=request.user.student)
+    context = {'title': f"Student Enquiries - {settings.APP_NAME}",'query': data, 'template':template}
+    return render(request, 'settings/query.html', context=context)
+
+def queries(request):
+    template = 'student_dashboard.html' if request.user.is_student else 'admin-layout.html'
+    if request.method == 'POST':
+        if not request.user.is_faculty or not request.user.faculty:
+            return JsonResponse({'message': 'You are not authorized to perform this action', 'success': False}, status=403)
+        try:
+            id = request.POST.get('query_id')
+            description = request.POST.get('answer')
+
+            teacher = request.user.faculty
+            query = Student_Query.objects.get(pk=int(id))
+            Student_Queries_Answers.objects.create(
+                student_query=query,
+                teacher=teacher,
+                answer=description,
+            )
+            data = Student_Query.objects.all()
+            context = {'template': template, 'title': f"Student Enquiries - {settings.APP_NAME}",'queries': data, 'messages': [{'message': 'Reply added successfully', 'tag': 'success'}]}
+            return render(request, 'settings/queries.html', context=context)
+        except Exception as e:
+            print(e, 'error')
+            data = Student_Query.objects.all()
+            context = {'template': template,'title': f"Student Enquiries - {settings.APP_NAME}",'queries': data, 'messages': [{'message': 'An error occurred', 'tag': 'danger'}]}
+            return render(request, 'settings/queries.html', context=context)
+        
+    data = Student_Query.objects.all() if request.user.is_faculty else Student_Query.objects.filter(student=request.user.student)
+    context = {'template': template, 'title': f"Student Enquiries - {settings.APP_NAME}",'queries': data}
+    return render(request, 'settings/queries.html', context=context)

@@ -4,31 +4,41 @@
 
 <div class="flex w-full flex-wrap md:!flex-nowrap lg:space-x-4 py-4 lg:justify-around">
     <div class="!w-full !min-w-80 md:!w-1/4 rounded-2xl p-4">
-        <div class="bg-white min-h-96 border rounded-2xl shadow-md p-4">
-            <h2 class="text-xl font-bold mb-4">Noticeboard</h2>
-            <div class="flex flex-col space-y-4">
-                <div class="flex justify-between items-center">
-                    <p class="text-gray-600">Notice 1</p>
-                    <a href="#" class="text-blue-500">Read More</a>
+        <div class="bg-white min-h-[calc(100vh-200px)] border rounded-2xl overflow-x-hidden overflow-y-auto shadow-md">
+            <h2 class="text-base text-center uppercase py-1.5 bg-slate-800 text-white font-bold mb-2">Noticeboard</h2>
+
+          <div class="">
+            <div class="flex flex-col">
+              {% for notice in notices %}
+                <div class="flex group border-b hover:!bg-gray-300 px-4 flex-col">
+                  <div data-bs-toggle="modal" data-bs-target="#notice{{notice.id}}" class="my-2 group-hover:!bg-gray-300 cursor-pointer">
+                    <h2 class="text-sm font-bold text-slate-950">{{ notice.title }}</h2>
+                    <p class="text-xs uppercase font-semibold text-gray-700">{{ notice.created_at|date:"d M Y" }}</p>
+                  </div>
                 </div>
-                <div class="flex justify-between items-center">
-                    <p class="text-gray-600">Notice 2</p>
-                    <a href="#" class="text-blue-500">Read More</a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <p class="text-gray-600">Notice 3</p>
-                    <a href="#" class="text-blue-500">Read More</a>
-                </div>
-                <div class="flex justify-between items-center">
-                    <p class="text-gray-600">Notice 4</p>
-                    <a href="#" class="text-blue-500">Read More</a>
-                </div>
+                <div class="modal fade" id="notice{{notice.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateStudentLable" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="flex flex-col p-4">
+                            <p class="text-sm uppercase font-semibold text-gray-700">{{ notice.created_at|date:"d M Y" }}</p>
+                                <h2 class="text-lg font-bold mt-2 text-slate-950">{{ notice.title }}</h2>
+                              <p class="text-sm mt-4 dark:text-gray-400">{{ notice.message }}</p>
+                              {% if notice.attachment %}
+                                <p class="mt-3"> <span class="font-semibold"> attached file:</span> <a href="{{ notice.attachment.url }}" class="text-blue-500">Download</a></p>
+                              {% endif %}
+                          </div>
+                        <div data-bs-dismiss="modal" class="text-center items-center px-4 py-1 text-base font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Close</div>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
             </div>
+          </div>
         </div>
     </div>
     <div class="!min-w-72 !w-full md:!w-3/4 p-4">
         <!-- Boxes -->
-        <div class="flex flex-wrap justify-center lg:justify-start space-y-4 sm:space-x-2 sm:space-y-0 lg:space-x-6">
+        <div class="flex flex-wrap justify-center lg:justify-between space-y-4 sm:space-x-2 sm:space-y-0 lg:space-x-6">
             <div
       class="w-60 h-60 group/ls !bg-blue-200 mb-4 hover:!bg-slate-900 transition-all duration-700 dark:!bg-slate-900 !rounded-2xl hover:!shadow-lg">
       <a href="{% url "assignments-student" %}" class="h-60 relative w-60 flex justify-end flex-col">
@@ -65,7 +75,7 @@
           </div>
       </a>
     </div>
-    <div
+    <div data-bs-toggle="modal" data-bs-target="#viewMarks"
         class="w-60 h-60 group/ls !bg-blue-200 mb-4 hover:!bg-slate-900 transition-all duration-700 dark:!bg-slate-900 !rounded-2xl hover:!shadow-lg">
         <a href="#" class="h-60 w-60 relative flex justify-end flex-col">
           {% comment %} <div class="absolute w-7 h-7 p-1 group-hover/ls:bg-white bg-slate-900 rounded-full top-3 right-3" >
@@ -85,4 +95,84 @@
     </div>
 </div>
 
-    {% endblock %}
+<div class="mt-5 border border-slate-300 overflow-hidden rounded-2xl">
+    <div class="mb-4 mt-2 text-xl text-center font-bold">
+      Your Enquiries
+    </div>
+    {%if queries %}
+      {%for query in queries %}
+        <a href="{% url "student-enquiry-single" query.id %}">
+        <div class="flex flex-col justify-between bg-white dark:bg-slate-800 p-4 mx-4 rounded-xl shadow-sm mb-4">
+          <div class="flex justify-between items-center ">
+            <div class="flex">
+              <img src="{{ query.student.user.picture.url }}" alt="profile" class="w-12 h-12 rounded-full">
+              <div class="flex flex-col ml-4">
+              <div class="flex items-center space-x-5">
+                <span class="text-xs font-semibold dark:text-gray-400">{{ query.student.user.get_full_name}}</span>
+                <span class="text-xs font-semibold dark:text-gray-400">{{ query.created_at|date:"d M Y" }}</span>
+                <span class="text-xs font-semibold dark:text-gray-400"> <span class="font-bold"> Replies </span> {{ query.student_query_answers.all.count }}</span>
+              </div>
+              <h2 class="text-base font-bold dark:text-gray-200">{{ query.title }}</h2>
+            </div>
+            </div>
+          </div>
+        </div>
+        </a>
+      {% endfor %}
+  
+      {% if queries.count > 5 %}
+        <div class="flex mt-5 w-full py-2 bg-slate-900 justify-center">
+          <a href="{% url "student-enquiry" %}" class="text-slate-50 dark:text-slate-200">View All</a>
+          {% comment %} {% url "queries" %} {% endcomment %}
+        </div>
+      {% endif %}
+    {%else%}
+      <p class="text-center mb-2 dark:text-gray-200">No enquiries Found</p>
+    {% endif %}
+  </div>
+
+  <div class="modal fade" id="viewMarks" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateStudentLable" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="bg-slate-900 text-center text-white py-2"> Marks </div>
+          <div class="table-responsive">
+            <table id="data-mk" class="table table-bordered nowrap">
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Subject</th>
+                        <th>Mst-1 Marks</th>
+                        <th>Mst-2 Marks</th>
+                        <th>Assignment Marks</th>
+                        {% comment %} <th>Total Marks</th> {% endcomment %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mark in marks %}
+                        <tr class="rb-table-row" id="mark">
+                            <td>{{ mark.student.roll_number }}</td>
+                            <td>{{ mark.teacher.subject }}</td>
+                            <td>
+                                {{ mark.mst1 }}
+                            </td>
+                            <td>
+                                {{ mark.mst2 }}
+                            </td>
+                            <td>
+                                {{ mark.assignment }}
+                            </td>
+                            {% comment %} <td>
+                                {{ mark.get_total_marks }}
+                            </td> {% endcomment %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <button type="button" class="btn btn-danger w-full !rounded-none" data-bs-dismiss="modal">Go Back</button>
+        </div>
+    </div>
+  </div>
+
+
+{% endblock %}

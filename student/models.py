@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.mail import send_mail
+
+from IgCMS import settings
 
 # Create your models here.
 class Student_Query(models.Model):
@@ -13,6 +16,18 @@ class Student_Query(models.Model):
     class Meta:
         db_table = 'student_queries'
 
+    def send_succes_mail(self):
+        try:
+            send_mail(
+                'Query Submitted',
+                f'Your query has been submitted successfully, we will get back to you soon.',
+                settings.EMAIL_HOST_USER,
+                [self.student.user.email],
+                fail_silently=False,
+            )
+        except:
+            pass
+        
     def __str__(self):
         return self.title
     
@@ -27,6 +42,18 @@ class Student_Queries_Answers(models.Model):
 
     class Meta:
         db_table = 'student_queries_answers'
+
+    def send_succes_mail(self):
+        try:
+            send_mail(
+                'Query Answered',
+                f'Your query has been answered successfully, please check the answer. \n\n\n {self.answer} \n\n\n Regards, \n {self.teacher.user.get_full_name} \n',
+                settings.EMAIL_HOST_USER,
+                [self.student_query.student.user.email],
+                fail_silently=False,
+            )
+        except:
+            pass
 
     def __str__(self):
         return self.answer

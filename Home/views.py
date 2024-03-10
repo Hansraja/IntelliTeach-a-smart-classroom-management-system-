@@ -1,21 +1,29 @@
 import os
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseBadRequest, HttpResponseServerError
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from Admin.models import Student, Faculty
-
+from student.models import Student_Query
+from Home.models import Student_Notice, Attendance, Student_Marks, Teacher_Messages
+import datetime
 
 def home_login(request):
     if request.user.is_authenticated: # type: ignore
         if request.user.is_faculty: # type: ignore
             return redirect('teacher_dashboard')
         elif request.user.is_student:
+            student = request.user.student
+            marks = Student_Marks.objects.filter(student_id=student.id,)
+            notices = Student_Notice.objects.filter(created_at__date=datetime.date.today()) # type: ignore
+            queries = Student_Query.objects.filter(student_id=request.user.student.id, created_at__date=datetime.date.today()) # type: ignore
             title = 'Student Dashboard'
-            return render(request, 'student/dashboard.html', {'title': 'title'})
-        else:
+            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks})
+        elif request.user.is_hod:
             return redirect('admin_dashboard')
+        else:
+            return HttpResponseServerError('Invalid User Type')
         
     title = f'Login to {settings.APP_NAME}'
     if request.method == 'POST': # type: ignore
@@ -58,9 +66,10 @@ def home_login(request):
 def studentDashboard(request):
     if not request.user.is_student:
         return redirect('/')
+    notices = Student_Notice.objects.filter(created_at__date=datetime.date.today()) # type: ignore
+    queries = Student_Query.objects.filter(student_id=request.user.student.id, created_at__date=datetime.date.today()) # type: ignore
     title = 'Student Dashboard'
-    return render(request, 'student/dashboard.html', {'title': title})
-
+    return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices, })
 
 def Images(request, path: str):
     file_path = os.path.join(settings.MEDIA_ROOT, path)
@@ -70,3 +79,145 @@ def Images(request, path: str):
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
             return response
     raise Http404
+
+def attendance_list(request):
+    attendances = Attendance.objects.all()
+    context = {'title': 'Attendenace List', 'attendances': attendances,}
+    return render(request, 'settings/attendance-list.html', context=context)
+
+def marks_list(request):
+    if not request.user.is_faculty:
+        return redirect('/')
+
+    if request.method == 'POST':
+        try:
+            student_id = request.POST.getlist('id', None)
+            mst1 = request.POST.getlist('mst1', None)
+            mst2 = request.POST.getlist('mst2', None)
+            assignment = request.POST.getlist('assignment', None)
+            print(request.POST, student_id, mst1, mst2, assignment)
+
+            teacher = request.user.faculty
+            if student_id and mst1 and mst2 and assignment:
+                for id, m1, m2, a in zip(student_id, mst1, mst2, assignment):
+                    student = Student.objects.get(id=id)
+                    if not student:
+                        return HttpResponseServerError('Invalid Student')
+                    student_marks = Student_Marks.objects.filter(student_id=student.id, teacher_id=teacher.id)
+                    if student_marks:
+                        student_marks.delete()
+                    marks = Student_Marks(student=student, teacher=teacher, mst1=m1, mst2=m2, assignment=a)
+                    marks.save()
+                return redirect('marks')
+            else:
+                return HttpResponseServerError('Invalid Data')
+        except Exception as e: 
+            print(e, 'Got error while saving marks ...')
+            return HttpResponseServerError('Something went wrong')       
+
+    teacher = request.user.faculty # type: ignore
+    students = Student.objects.all()
+    marks = Student_Marks.objects.filter(teacher_id=teacher.id)
+    student_data = []
+
+    for student in students:
+        student_marks_count = student.student_marks.filter(teacher__user__id=request.user.id).count()
+        student_data.append({'student': student, 'student_marks_count': student_marks_count})
+
+    context = {'title': 'Marks List', 'marks': marks, 'students': students, 'student_data': student_data,}
+    return render(request, 'student/marks-list.html', context=context)
+
+def marks_mst1(request):
+    if not request.user.is_faculty:
+        return redirect('/')
+
+    if request.method == 'POST':
+        try:
+            student_id = request.POST.getlist('id', None)
+            mst1 = request.POST.getlist('mst1', None)
+
+            teacher = request.user.faculty
+            if student_id and mst1:
+                for id, m1 in zip(student_id, mst1):
+                    student = Student.objects.get(id=id)
+                    if not student:
+                        return HttpResponseServerError('Invalid Student')
+                    student_marks = Student_Marks.objects.filter(student_id=student.id, teacher_id=teacher.id)
+                    if student_marks:
+                        student_marks[0].mst1 = m1
+                        student_marks[0].save()
+                    else:
+                        marks = Student_Marks(student=student, teacher=teacher, mst1=m1)
+                        marks.save()
+                return redirect('marks')
+            else:
+                return HttpResponseServerError('Invalid Data')
+        except Exception as e: 
+            print(e, 'Got error while saving marks ...')
+            return HttpResponseServerError('Something went wrong')       
+    return HttpResponseBadRequest('Invalid Request')
+
+def marks_mst2(request):
+    if not request.user.is_faculty:
+        return redirect('/')
+
+    if request.method == 'POST':
+        try:
+            student_id = request.POST.getlist('id', None)
+            mst2 = request.POST.getlist('mst2', None)
+
+            teacher = request.user.faculty
+            if student_id and mst2:
+                for id, m2 in zip(student_id, mst2):
+                    student = Student.objects.get(id=id)
+                    if not student:
+                        return HttpResponseServerError('Invalid Student')
+                    student_marks = Student_Marks.objects.filter(student_id=student.id, teacher_id=teacher.id)
+                    if student_marks:
+                        student_marks[0].mst2 = m2
+                        student_marks[0].save()
+                    else:
+                        marks = Student_Marks(student=student, teacher=teacher, mst2=m2)
+                        marks.save()
+                return redirect('marks')
+            else:
+                return HttpResponseServerError('Invalid Data')
+        except Exception as e: 
+            print(e, 'Got error while saving marks ...')
+            return HttpResponseServerError('Something went wrong')       
+    return HttpResponseBadRequest('Invalid Request')
+
+def marks_assign(request):
+    if not request.user.is_faculty:
+        return redirect('/')
+
+    if request.method == 'POST':
+        try:
+            student_id = request.POST.getlist('id', None)
+            assignment = request.POST.getlist('assignment', None)
+
+            teacher = request.user.faculty
+            if student_id and assignment:
+                for id, a in zip(student_id, assignment):
+                    student = Student.objects.get(id=id)
+                    if not student:
+                        return HttpResponseServerError('Invalid Student')
+                    student_marks = Student_Marks.objects.filter(student_id=student.id, teacher_id=teacher.id)
+                    if student_marks:
+                        student_marks[0].assignment = a
+                        student_marks[0].save()
+                    else:
+                        marks = Student_Marks(student=student, teacher=teacher, assignment=a)
+                        marks.save()
+                return redirect('marks')
+            else:
+                return HttpResponseServerError('Invalid Data')
+        except Exception as e: 
+            print(e, 'Got error while saving marks ...')
+            return HttpResponseServerError('Something went wrong')       
+    return HttpResponseBadRequest('Invalid Request')
+
+def teacher_messages(request):
+    messages = Teacher_Messages.objects.all()
+    context = {'title': 'Teacher Messages', 'messages': messages,}
+    return render(request, 'settings/teachmess.html', context=context)

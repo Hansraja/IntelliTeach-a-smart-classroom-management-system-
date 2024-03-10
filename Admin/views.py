@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import AuthUser
+from Home.models import Student_Notice
 import json
 from django.conf import settings
 
@@ -81,4 +82,33 @@ def update_password(request):
                 return JsonResponse({'success': False, 'message': 'You are not authorized to perform this action'})
         else:
             return JsonResponse({'success': False, 'message': 'You are not logged in'})
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
+
+
+@login_required
+def logout(request):
+    from django.contrib.auth import logout
+    logout(request)
+    return redirect('home')
+
+@login_required
+def add_notice(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated and request.user.is_hod or request.user.is_faculty: # type: ignore
+            title = request.POST.get('title', None)
+            description = request.POST.get('description', None)
+            attachment = request.FILES.get('attachment', None)
+            try:
+                notice = Student_Notice.objects.create(title=title, message=description, attachment=attachment, admin=request.user)
+                try:
+                    notice.send_to_email()
+                except Exception as e:
+                    print(e)
+                    return JsonResponse({'success': True, 'message': f'Notice added successfully, but an error occurred while sending email to students. \n-----> {e}'})
+                return JsonResponse({'success': True, 'message': 'Notice added successfully'})
+            except Exception as e:
+                print(e)
+                return JsonResponse({'success': False, 'message': 'An error occurred while adding notice'})
+        else:
+            return JsonResponse({'success': False, 'message': 'You are not authorized to perform this action'})
     return JsonResponse({'success': False, 'message': 'Invalid request'})

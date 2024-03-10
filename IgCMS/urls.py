@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from Admin.views import admin_dashboard, update_password
+from Admin.views import admin_dashboard, update_password, logout
 from teachers.views import teachers_list, delete_teacher, update_teacher
 
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
     path('delete_teacher/', delete_teacher, name='delete-teacher'),
     path('update_teacher/', update_teacher, name='update-teacher'),
     path('update_password/', update_password, name='update-password'),
+    path('logout/', logout, name='logout'),
 ]
 
 if settings.DEBUG:

@@ -1,9 +1,10 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponseServerError
+from django.http import HttpResponseServerError, JsonResponse
 from Admin.models import Student, AuthUser
 from django.core.exceptions import ValidationError
 import datetime
 from django.contrib.auth.decorators import login_required
+from student.models import Student_Query
 from teachers.models import AssignMents, Important_Topics
 from django.conf import settings
 
@@ -142,3 +143,19 @@ def student_topics(request):
         context = {'title': f'Important Topics - {settings.APP_NAME}', 'topics': topics}
         return render(request, 'topics.html', context=context)
     return redirect('/')
+
+@login_required
+def student_enquiry(request):
+    if request.method == 'POST':
+        title = request.POST.get('title', None)
+        description = request.POST.get('description', None)
+        try:
+            student = request.user.student
+            student_query = Student_Query.objects.create(student=student, title=title, description=description)
+            student_query.send_succes_mail()
+        except ValidationError as e:
+            return render(request, 'settings/status.html', context={'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]})
+        except Exception as e:
+            return render(request, 'settings/status.html', context={'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]})
+        return render(request, 'settings/status.html', context={'messages': [{'message': 'Query submitted successfully!', 'tag': 'success'}]})
+    return render(request, 'settings/status.html', context={'messages': [{'message': 'Request not Allowed!', 'tag': 'danger'}]})

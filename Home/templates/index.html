@@ -18,34 +18,7 @@
                     </div>
 
                     <div class="w-full mb-6">
-                        <h1 id='welTxt' class="text-2xl stymie"></h1>
-                        <p id='logPtxt' class="text-gray-600"></p>
-                        <script>
-                            let welTxt = document.getElementById("welTxt");
-                            let logPtxt = document.getElementById("logPtxt");
-                            let txt = "Welcome back!";
-                            let txt2 = "Please login to your account.";
-                            let i = 0;
-                            let j = 0;
-                            let speed = 50;
-                            let speed2 = 100;
-                            function typeWriter() {
-                                if (i < txt.length) {
-                                    welTxt.innerHTML += txt.charAt(i);
-                                    i++;
-                                    setTimeout(typeWriter, speed);
-                                }
-                            }
-                            function typeWriter2() {
-                                if (j < txt2.length) {
-                                    logPtxt.innerHTML += txt2.charAt(j);
-                                    j++;
-                                    setTimeout(typeWriter2, speed2);
-                                }
-                            }
-                            typeWriter();
-                            typeWriter2();
-                        </script>
+                        <h1 id='welTxt' class="text-2xl stymie">Welcome,</h1>
                     </div>
                     <div class="">
                         <div class="border-2 px-1 py-1 rounded-full w-full backdrop-blur-3xl">

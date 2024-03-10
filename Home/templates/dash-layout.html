@@ -29,6 +29,7 @@
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
             <div class="flex items-center justify-between">
                 <div class="flex items-center justify-start">
+                    {% if not user.is_student %}
                     <button id="toggleSidebarMobile" aria-expanded="true" aria-controls="sidebar"
                         class="p-2 text-gray-600 rounded cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         <svg id="toggleSidebarMobileHamburger" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
@@ -44,12 +45,13 @@
                                 clip-rule="evenodd"></path>
                         </svg>
                     </button>
-                    <a href="/" class="flex ml-2 md:mr-24">
+                    {% endif %}
+                    <a href="/" class="flex {% if not user.is_student %} ml-2 {%endif%} md:mr-24">
                         <img src="{% static "img/IntelliTeach.png" %}" class="h-8 rounded-full mr-3" alt="Logo" />
                         <span
                             class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">IntelliTeach</span>
                     </a>
-                    <form action="#" method="GET" class="hidden lg:block lg:pl-3.5">
+                    {% comment %} <form action="#" method="GET" class="hidden lg:block lg:pl-3.5">
                         <label for="topbar-search" class="sr-only">Search</label>
                         <div class="relative mt-1 lg:w-96">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -64,11 +66,11 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 placeholder="Search">
                         </div>
-                    </form>
+                    </form> {% endcomment %}
                 </div>
                 <div class="flex items-center">
                     <!-- Search mobile -->
-                    <button id="toggleSidebarMobileSearch" type="button"
+                    {% comment %} <button id="toggleSidebarMobileSearch" type="button"
                         class="p-2 text-gray-500 rounded-lg lg:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                         <span class="sr-only">Search</span>
                         <!-- Search icon -->
@@ -77,7 +79,7 @@
                                 d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                    </button>
+                    </button> {% endcomment %}
                     <!-- Notifications -->
                     {% comment %} <button type="button" data-dropdown-toggle="notification-dropdown"
                         class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
@@ -277,16 +279,16 @@
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in user-profile-menu !-left-20"
                             aria-labelledby="userDropdown">
-                            <div class="px-6 py-8" role="none">
-                                <div class="flex mb-1 justify-start space-x-2 items-center">
-                                    <div class="">
-                                        <img src="{% if user.picture %}{{user.picture.url}}{% else %}{% static "img/undraw_profile.svg" %}{% endif %}" class="rounded-full w-10 h-10" style="width: 40px; height: 40px;">
+                            <div class="px-4 py-6" role="none">
+                                <div class="flex mb-1 justify-start items-center">
+                                    <div class="mr-5">
+                                        <img src="{% if user.picture %}{{user.picture.url}}{% else %}{% static "img/undraw_profile.svg" %}{% endif %}" class="rounded-full bg-slate-300 border border-slate-950 w-10 h-10" style="width: 40px; height: 40px;">
                                     </div>
                                     <div class="flex flex-col justify-center" >
-                                        <p class="text-sm font-bold text-gray-900 dark:text-white" role="none">
+                                        <p class="text-sm font-extrabold text-gray-900 dark:text-white" role="none">
                                             {{ user.get_full_name }}
                                         </p>
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                        <p class="text-sm text-gray-900 truncate dark:text-gray-300" role="none">
                                             {%if user.is_faculty %} {{ user.faculty.subject }} {% elif user.is_student %} Student {% else %} Admin {% endif %}
                                         </p>
                                     </div>
@@ -295,23 +297,23 @@
                                     {{ user.email }}
                                 </p>
                                 {%if user.is_student %}
-                                    <p class="text-sm mt-1 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                      Roll No: {{ user.student.roll_number }}
+                                    <p class="text-sm mt-3 max-w-[200px] text-gray-900 truncate dark:text-gray-300" role="none">
+                                      <span class="font-semibold">Roll No: </span> {{ user.student.roll_number }}
                                     </p>
-                                    <p class="text-sm mt-1 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                       Father's Name: {{ user.student.father_name }}
+                                    <p class="text-sm mt-1 max-w-[200px] text-gray-900 truncate dark:text-gray-300" role="none">
+                                        <span class="font-semibold">Father's Name: </span> {{ user.student.father_name }}
                                     </p>
-                                    <p class="text-sm mt-1 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                                      DOB: {{ user.student.dob }}
+                                    <p class="text-sm mt-1 max-w-[200px] text-gray-900 truncate dark:text-gray-300" role="none">
+                                        <span class="font-semibold">DOB: </span> {{ user.student.dob }}
                                     </p>
                                 {% endif %}
                             </div>
-                            <ul class="py-1" role="none">
+                            <ul class="border-t" role="none">
                                 <li>
-                                    <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
+                                    <a href="/" class="block px-4 py-2 border-b rounded-lg text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Dashboard</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" type="button" data-bs-toggle="modal" data-bs-target="#logoutModal" role="menuitem">Logout</a>
+                                    <a href="" class="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" type="button" data-bs-toggle="modal" data-bs-target="#logoutModal" role="menuitem">Logout</a>
                                 </li>
                             </ul>
                         </div>
@@ -387,7 +389,7 @@
                 <div class="modal-body">Are you sure you want to logout?</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/">Logout</a>
+                    <a class="btn btn-primary" href="{% url "logout" %}">Logout</a>
                 </div>
             </div>
         </div>
@@ -407,7 +409,9 @@
     {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> {% endcomment %}
     {% comment %} <script src="https://code.jquery.com/jquery-3.7.1.js"></script> {% endcomment %}
     <script> 
-        new DataTable(' #data-students'); </script>
+        new DataTable('#data-students'); 
+        new DataTable('#data-marks'); 
+    </script>
 
 </body>
 

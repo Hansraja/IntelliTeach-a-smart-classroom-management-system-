@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.db import models
 from Admin.models import AuthUser, Faculty, Student
+from django.core.mail import send_mail
 # Create your models here.
 
 class Teacher_Messages(models.Model):
@@ -23,7 +25,7 @@ class Student_Notice(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_messages', null=True, blank=True)
     title = models.CharField(max_length=500, blank=True, null=True)
     message = models.CharField(max_length=10000, blank=True, null=True)
-    tag = models.CharField(max_length=255, blank=True, null=True)
+    attachment = models.FileField(upload_to='attachments/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_read = models.BooleanField(default=False)
@@ -31,10 +33,32 @@ class Student_Notice(models.Model):
     class Meta:
         db_table = 'student_messages'
 
+    def send_to_email(self):
+        try:
+            for student in Student.objects.all():
+                send_mail(
+                    f"{self.title} - {settings.APP_NAME}",
+                    self.message,
+                    settings.EMAIL_HOST_USER,
+                    [student.user.email],
+                    fail_silently=False,
+                )
+            for teacher in Faculty.objects.all():
+                send_mail(
+                    f"{self.title} - {settings.APP_NAME}",
+                    self.message,
+                    settings.EMAIL_HOST_USER,
+                    [teacher.user.email],
+                    fail_silently=False,
+                )
+        except:
+            pass
+
     def __str__(self):
         return self.message
     
 class Student_Marks(models.Model):
+    teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teacher_marks', null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_marks', null=True, blank=True)
     mst1 = models.IntegerField(blank=True, null=True)
     mst2 = models.IntegerField(blank=True, null=True)
@@ -46,8 +70,17 @@ class Student_Marks(models.Model):
     class Meta:
         db_table = 'student_marks'
 
+    def send_to_email(self):
+        pass
+
+    def get_total_marks(self):
+        mst1 = int(self.mst1) if self.mst1 else 0
+        mst2 = int(self.mst2) if self.mst2 else 0
+        assignment = int(self.assignment) if self.assignment else 0
+        return mst1 + mst2 + assignment
+
     def __str__(self):
-        return self.student.user.get_full_name + ' marks' # type: ignore
+        return f"{self.student.user.get_full_name()} marks" # type: ignore
     
 class Time_Table(models.Model):
     DAY_CHOICES = (

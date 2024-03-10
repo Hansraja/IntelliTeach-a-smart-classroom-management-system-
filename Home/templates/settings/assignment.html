@@ -17,34 +17,33 @@
     Add Assignment
   </button>
 </div>
-<div class="table-responsive">
-  <table id="data-assignments" class="table dt-responsive table-hover table-bordered nowrap w-100">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Title</th>
-        <th scope="col">Description</th>
-        <th scope="col">Questions</th>
-        <th scope="col">Due Date</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {% for assignment in assignments %}
-      <tr class="rb-table-row" id="assignment-{{ assignment.id }}">
-        <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ assignment.title }}</td>
-        <td>{% if assignment.description %}{{ assignment.description }}{% else %}<div class="__">_</div>{% endif %}</td>
-        <td>{{ assignment.question_length }}</td>
-        <td>{{ assignment.due_date }}</td>
-        <td>
-          <button type="button" class="btn btn-info btn-sm mr-2 edit-btn"><a href="{% url "assignment" assignment.id %}"> View </a></button>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="grid grid-cols-1 gap-4">
+  {% for assignment in assignments %}
+  <a href="{% url "assignment" assignment.id %}">
+  <div class="p-4 bg-white relative shadow-md rounded-2xl">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold">{{ assignment.title }}</h3>
+      
+      {% if assignment.due_date <= now %}
+        <p class="text-sm font-bold text-red-500">{{ assignment.due_date }}</p>
+      {% elif assignment.due_date <= now|add:3|date:"Y-m-d" %}
+        <p class="text-sm font-bold text-red-500">{{ assignment.due_date }}</p>
+      {% else %}
+        <p class="text-sm font-semibold text-gray-500">{{ assignment.due_date }}</p>
+      {% endif %}
+    </div>
+    <div class="mb-4">
+      {% if assignment.description %}
+      <p>{{ assignment.description }}</p>
+      {% else %}
+      <div class="text-gray-400">No description available</div>
+      {% endif %}
+    </div>
+    <div class="text-sm text-gray-500">Questions: {{ assignment.question_length }}</div>
+    <button type="button" class="bg-red-800 rounded-xl absolute right-5 bottom-5 text-white px-3 py-1 font-semibold text-sm"><a href="{% url "assignment-delete" assignment.id %}" >Delete</a></button>
+  </div>
+  </a>
+  {% endfor %}
 </div>
 
 <div class="modal fade" id="addStudents" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"

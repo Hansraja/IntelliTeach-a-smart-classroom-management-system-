@@ -1,14 +1,14 @@
 {% extends "dash-layout.html" %}
 
 {% block layout %}
-
+   {% if not user.is_student %}
     <aside id="sidebar" class="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 hidden w-64 h-full pt-5 font-normal duration-75 lg:flex transition-width" aria-label="Sidebar">
         <div class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
             <div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
             <div
             class="flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
             <ul class="pb-2 space-y-2">
-                <li>
+                {% comment %} <li>
                     <form action="#" method="GET" class="lg:hidden">
                         <label for="mobile-search" class="sr-only">Search</label>
                         <div class="relative">
@@ -26,7 +26,7 @@
                                 placeholder="Search">
                         </div>
                     </form>
-                </li>
+                </li> {% endcomment %}
                 <li>
                     <a href="/"
                         class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
@@ -62,7 +62,18 @@
                         <span class="flex-1 ml-3 text-left whitespace-nowrap">Students List</span>
                     </a>
                 </li>
-
+                {% if user.is_faculty %}
+                <li>
+                    <a href="{% url "marks" %}"
+                        class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                        aria-controls="dropdown-layouts" data-collapse-toggle="dropdown-layouts">
+                        <svg class="flex-shrink-0 w-6 h-6 !text-gray-700 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                            fill="currentColor" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><line x1="32" y1="64" x2="32" y2="144" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M54.2,216a88.1,88.1,0,0,1,147.6,0" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><polygon points="224 64 128 96 32 64 128 32 224 64" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M169.3,82.2a56,56,0,1,1-82.6,0" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/>
+                        </svg>
+                        <span class="flex-1 ml-3 text-left whitespace-nowrap">Student Marks</span>
+                    </a>
+                </li>
                 <li>
                     <a href="{% url "assignments" %}" class="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700
                      ">
@@ -81,18 +92,32 @@
                       <span class="ml-3" >Important Topics</span>
                     </a>
                 </li>
+                {% endif %}
+                {% comment %} {% if user.is_hod %} {% endcomment %}
+                    {% comment %} <li>
+                        <a href="{% url "attendance" %}"
+                            class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                            aria-controls="dropdown-layouts" data-collapse-toggle="dropdown-layouts">
+                            <svg class="flex-shrink-0 w-6 h-6 !text-gray-800 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                                fill="currentColor" width="20" height="20" xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H53.4a7.9,7.9,0,0,0,7.2-4.6,48.1,48.1,0,0,1,86.8,0,7.9,7.9,0,0,0,7.2,4.6H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM104,168a32,32,0,1,1,32-32A32.1,32.1,0,0,1,104,168Zm112,32H159.4a63.7,63.7,0,0,0-13.1-16H192a8,8,0,0,0,8-8V80a8,8,0,0,0-8-8H64a8,8,0,0,0-8,8v96a8,8,0,0,0,6,7.7A64.2,64.2,0,0,0,48.6,200H40V56H216Z"/>
+                            </svg>
+                            <span class="flex-1 ml-3 text-left whitespace-nowrap">Attendance</span>
+                        </a>
+                    </li> {% endcomment %}
+                {% comment %} {% endif %} {% endcomment %}
             </ul>
             <div class="pt-2 space-y-2">
-              <a href="https://github.com/themesberg/flowbite-admin-dashboard/issues" target="_blank" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
+              <a href="" data-bs-toggle="modal" data-bs-target="#addNotice" class="flex items-center p-2 text-base text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
                 <svg class="flex-shrink-0 w-6 h-6 !text-gray-700 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z" clip-rule="evenodd"></path></svg>
-                <span class="ml-3" >Ask Question</span>
+                <span class="ml-3" >Add Notice</span>
               </a>
             </div>
             </div>
             </div>
         </div>
     </aside>
-
+    {% endif %}
     <div class="fixed inset-0 z-10 hidden bg-gray-900/50 dark:bg-gray-900/90" id="sidebarBackdrop"></div>
 
     <div id="main-content" class="relative w-full p-4 h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900">
@@ -103,5 +128,83 @@
     </main>
 
     </div>
-    
+
+<div class="modal fade" id="addNotice" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateStudentLable" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="p-4">
+                <div class="mb-4">
+                    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input required type="text" name="title" id="title" class="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" id="description" rows="3" class="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="attachment" class="block text-sm font-medium text-gray-700">Attachment</label>
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div class="space-y-1 text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M20 8v6h6v24h-6v6h16V8H20zm14 20h-4v4h-4v-4h-4v-4h4v-4h4v4h4v4z"></path>
+                            </svg>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-primary-600 hover:text-primary-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
+                                    <span>Upload a file</span>
+                                    <input id="file-upload" name="attachment" type="file" class="sr-only">
+                                </label>
+                                <p class="pl-1">or drag and drop</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, PDF or other up to 100MB</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="SUBMITmdl" type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">Submit</button>
+                <button type="button" data-bs-dismiss="modal" class="inline-flex ml-5 items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Close</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const toggle = document.getElementById("toggleSidebarMobile");
+    const sidebar = document.getElementById("sidebar");
+    toggle.addEventListener('click', function () {
+        sidebar.classList.toggle("hidden");
+    });
+</script>
+
+<script>
+    document.querySelector('#addNotice form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const btn = document.getElementById('SUBMITmdl');
+        btn.disabled = true;
+        const formData = new FormData(this);
+        let csrf = await cookieStore.get("csrftoken");
+        csrf = await csrf.value; 
+        fetch('{% url "add_notice" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrf,
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                btn.disabled = false;
+                document.querySelector('#addNotice').modal('hide');
+                alert(data.message);
+            } else {
+                btn.disabled = false;
+                alert('An error occured, please try again later.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occured, please try again later. check your browser console for more information.')
+        });
+    });
+</script>
+
 {% endblock %}
