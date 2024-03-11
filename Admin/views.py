@@ -51,7 +51,8 @@ def student_login(request):
 
 
 def admin_dashboard(request):
-    context = {'title': f"Admin - {settings.APP_NAME}"}
+    notices = Student_Notice.objects.all().order_by('-created_at')
+    context = {'title': f"Admin - {settings.APP_NAME}", 'notices': notices}
     return render(request, 'admin.html', context=context)
 
 
@@ -112,3 +113,14 @@ def add_notice(request):
         else:
             return JsonResponse({'success': False, 'message': 'You are not authorized to perform this action'})
     return JsonResponse({'success': False, 'message': 'Invalid request'})
+
+
+@login_required(login_url='home')
+def delete_notice(request, id):
+    try:
+        notice = Student_Notice.objects.get(id=int(id))
+        notice.delete()
+        return redirect('home')
+    except Exception as e:
+        print(e)
+        return redirect('home')

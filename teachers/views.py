@@ -3,7 +3,7 @@ from django.http import HttpResponseForbidden, HttpResponseServerError, JsonResp
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
-from Home.models import Student_Marks
+from Home.models import Student_Marks, Student_Notice
 from .utils import menu
 from Admin.models import AuthUser, Faculty, Student
 from teachers.models import AssignMents, Assignment_Questions, Important_Topics
@@ -20,7 +20,7 @@ title = 'Teachers Dashboard'
 def facultyDashboard(request):
     if not request.user.is_faculty:
         return redirect('/')
-    
+    notices = Student_Notice.objects.all().order_by('-created_at')
     teacher = request.user.faculty # type: ignore
     students = Student.objects.all()
     student_data = []
@@ -29,7 +29,7 @@ def facultyDashboard(request):
         student_data.append({'student': student, 'student_marks_count': student_marks_count})
 
     queries = Student_Query.objects.all()
-    context = {'title': f'Teachers Dahboard - {settings.APP_NAME}', 'queries': queries,'student_data': student_data}
+    context = {'title': f'Teachers Dahboard - {settings.APP_NAME}', 'notices': notices, 'queries': queries,'student_data': student_data}
     return render(request, 'faculty_dashboard.html',context=context) # type: ignore
 
 
