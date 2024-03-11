@@ -16,8 +16,8 @@ def home_login(request):
         elif request.user.is_student:
             student = request.user.student
             marks = Student_Marks.objects.filter(student_id=student.id,)
-            notices = Student_Notice.objects.filter(created_at__date=datetime.date.today()) # type: ignore
-            queries = Student_Query.objects.filter(student_id=request.user.student.id, created_at__date=datetime.date.today()) # type: ignore
+            notices = Student_Notice.objects.filter().order_by('-created_at') # type: ignore
+            queries = Student_Query.objects.filter(student_id=request.user.student.id).order_by('-created_at') # type: ignore
             title = 'Student Dashboard'
             return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks})
         elif request.user.is_hod:
@@ -36,6 +36,9 @@ def home_login(request):
             if user is not None and user.is_faculty and faculty: # type: ignore
                 login(request, user) # type: ignore
                 return redirect('teacher_dashboard')
+            elif  user is not None and user.is_hod:
+                login(request, user) # type: ignore
+                return redirect('admin_dashboard')
             else:
                 return render(request=request, template_name='index.html', context={'title':title, 'messages': [{'text': 'Invalid Email or Password', 'type': 'error'}], 'selected': 'faculty'}) # type: ignore
         elif selected == 'student':
@@ -66,8 +69,8 @@ def home_login(request):
 def studentDashboard(request):
     if not request.user.is_student:
         return redirect('/')
-    notices = Student_Notice.objects.filter(created_at__date=datetime.date.today()) # type: ignore
-    queries = Student_Query.objects.filter(student_id=request.user.student.id, created_at__date=datetime.date.today()) # type: ignore
+    notices = Student_Notice.objects.filter().order_by('-created_at') # type: ignore
+    queries = Student_Query.objects.filter(student_id=request.user.student.id, ).order_by('-created_at') # type: ignore
     title = 'Student Dashboard'
     return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices, })
 

@@ -52,7 +52,7 @@ def student_login(request):
 
 def admin_dashboard(request):
     context = {'title': f"Admin - {settings.APP_NAME}"}
-    return render(request, 'admin.html')
+    return render(request, 'admin.html', context=context)
 
 
 def update_password(request):
@@ -85,13 +85,13 @@ def update_password(request):
     return JsonResponse({'success': False, 'message': 'Invalid request'})
 
 
-@login_required
+@login_required(login_url='home')
 def logout(request):
     from django.contrib.auth import logout
     logout(request)
     return redirect('home')
 
-@login_required
+@login_required(login_url='home')
 def add_notice(request):
     if request.method == 'POST':
         if request.user.is_authenticated and request.user.is_hod or request.user.is_faculty: # type: ignore
