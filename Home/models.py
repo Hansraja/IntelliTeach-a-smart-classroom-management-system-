@@ -36,18 +36,18 @@ class Student_Notice(models.Model):
     def send_to_email(self):
         try:
             for student in Student.objects.all():
-                send_mail(
+                send_mail(  
                     f"{self.title} - {settings.APP_NAME}",
                     self.message,
-                    settings.EMAIL_HOST_USER,
+                    settings.DEFAULT_FROM_EMAIL,
                     [student.user.email],
                     fail_silently=False,
                 )
             for teacher in Faculty.objects.all():
-                send_mail(
+                send_mail( 
                     f"{self.title} - {settings.APP_NAME}",
                     self.message,
-                    settings.EMAIL_HOST_USER,
+                    settings.DEFAULT_FROM_EMAIL,
                     [teacher.user.email],
                     fail_silently=False,
                 )

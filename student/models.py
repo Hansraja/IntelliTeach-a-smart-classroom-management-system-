@@ -21,7 +21,7 @@ class Student_Query(models.Model):
             send_mail(
                 'Query Submitted',
                 f'Your query has been submitted successfully, we will get back to you soon.',
-                settings.EMAIL_HOST_USER,
+                settings.DEFAULT_FROM_EMAIL,
                 [self.student.user.email],
                 fail_silently=False,
             )
@@ -48,7 +48,7 @@ class Student_Queries_Answers(models.Model):
             send_mail(
                 'Query Answered',
                 f'Your query has been answered successfully, please check the answer. \n\n\n {self.answer} \n\n\n Regards, \n {self.teacher.user.get_full_name} \n',
-                settings.EMAIL_HOST_USER,
+                settings.DEFAULT_FROM_EMAIL,
                 [self.student_query.student.user.email],
                 fail_silently=False,
             )

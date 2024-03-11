@@ -39,8 +39,9 @@ AUTH_USER_MODEL = 'Admin.AuthUser'
 # AUTHENTICATION_BACKENDS = ['Admin.backends.AuthBackend']
 
 EMAIL_HOST = 'mail.vizion2050.in'
+DEFAULT_FROM_EMAIL = 'intelliteach@gmail.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'igcms@vizion2050.in'
+EMAIL_HOST_USER = 'intelliteach@vizion2050.in'
 EMAIL_HOST_PASSWORD = 'IgCMS@r#99'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True

@@ -114,10 +114,11 @@ def add_notice(request):
             return JsonResponse({'success': False, 'message': 'You are not authorized to perform this action'})
     return JsonResponse({'success': False, 'message': 'Invalid request'})
 
-
+from django.core.mail import send_mail
 @login_required(login_url='home')
 def delete_notice(request, id):
     try:
+        send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject='Hello Email from IntelliTeach',  recipient_list=['ravikantsaini047@gmail.com'], message='Hello I am From IntelliTeach')
         notice = Student_Notice.objects.get(id=int(id))
         notice.delete()
         return redirect('home')

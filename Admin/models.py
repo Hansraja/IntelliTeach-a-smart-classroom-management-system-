@@ -60,7 +60,7 @@ class AuthUser(AbstractBaseUser, PermissionsMixin):
         message = f'Hello {self.get_full_name()},\n\nYour password has been reset successfully.\n\nHere are your new login details:\n\nEmail: {self.email}\nPassword: {password}\n\nPlease note that your password should not be shared with anyone.\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.'
         from_email = 'igcms@igcms.com'
         try:
-            send_mail(subject=subject, from_email=from_email, recipient_list=[self.email], message=message)
+            send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject=subject,  recipient_list=[self.email], message=message)
         except:
             pass
 
@@ -69,7 +69,7 @@ class AuthUser(AbstractBaseUser, PermissionsMixin):
         message = f'Hello {self.get_full_name()},\n\nYour account has been deleted successfully.\n\nIf you have any queries, please reach out to us through your dashboard.'
         from_email = 'ig@igcms.com'
         try:
-            send_mail(subject=subject, from_email=from_email, recipient_list=[self.email], message=message)
+            send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject=subject,  recipient_list=[self.email], message=message)
         except:
             pass
 
@@ -88,7 +88,7 @@ class Faculty(models.Model):
         message = f'Hello {self.user.get_full_name()},\n\nYou have been successfully added to the {settings.COLLEGE_NAME}\'s class room management System.\n\nHere are your login details:\n\nEmail: {self.user.email}\nPassword: {password}\n\nPlease note that your password should not be shared with anyone.\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.'
         from_email = 'ik@igcms.com'
         try:
-            send_mail(subject=subject, from_email=from_email, recipient_list=[self.user.email], message=message)
+            send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject=subject,  recipient_list=[self.user.email], message=message)
         except:
             pass
 
@@ -108,7 +108,7 @@ class Student(models.Model):
         message = f'Hello {self.user.get_full_name()},\n\nYou have been successfully added to the {settings.COLLEGE_NAME}\'s class room management System.\n\nHere are your login details:\n\nRoll No.: {self.roll_number}\nPassword: {password}\n\nPlease note that your password should not be shared with anyone.\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.'
         from_email = 'ikgcms@igcms.com'
         try:
-            send_mail(subject=subject, from_email=from_email, recipient_list=[self.user.email], message=message)
+            send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject=subject,  recipient_list=[self.user.email], message=message)
         except:
             pass
 
