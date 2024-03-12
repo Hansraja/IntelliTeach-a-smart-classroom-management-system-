@@ -32,11 +32,15 @@ def home_login(request):
         if selected == 'faculty':
             email = request.POST['email'] # type: ignore
             user = authenticate(request, username=email, password=password)
-            faculty = Faculty.objects.get(user_id=user.id) if user else None # type: ignore
+            try:
+                faculty = Faculty.objects.get(user_id=user.id) if user else None # type: ignore
+            except Exception as e:
+                faculty = None
+                print(e)
             if user is not None and user.is_faculty and faculty: # type: ignore
                 login(request, user) # type: ignore
                 return redirect('teacher_dashboard')
-            elif  user is not None and user.is_hod:
+            elif user is not None and user.is_hod:
                 login(request, user) # type: ignore
                 return redirect('admin_dashboard')
             else:
