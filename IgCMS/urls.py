@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from Admin.views import admin_dashboard, update_password, logout
+from Admin.views import admin_dashboard, update_password, logout, time_table, update_time_table, attendance_view, one_attendance_view
 from teachers.views import teachers_list, delete_teacher, update_teacher
 
 urlpatterns = [
@@ -27,6 +27,10 @@ urlpatterns = [
     path('dashboard/', include('teachers.urls')),
     path('', include('student.urls')),
     path('admin/', admin_dashboard, name='admin_dashboard' ),
+    path('admin/update_time_table/', update_time_table, name='update_time_table' ),
+    path('time-table/', time_table, name='time_table' ),
+    path('attendance/', attendance_view, name='attendance' ),
+    path('attendance/<str:id>/', one_attendance_view, name='attendance' ),
     path('teachers/', teachers_list, name='teachers_list'),
     path('delete_teacher/', delete_teacher, name='delete-teacher'),
     path('update_teacher/', update_teacher, name='update-teacher'),

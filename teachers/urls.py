@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import delete_topic, facultyDashboard, faculty_Profile, assignment_list, single_assignment, update_assignment, important_topics, delete_topic, view_query, queries, delete_assignment_r
-from Home.views import marks_list, attendance_list, teacher_messages, marks_mst1, marks_mst2, marks_assign
+from Home.views import marks_list, teacher_messages, marks_mst1, marks_mst2, marks_assign
 
 urlpatterns = [
     path('', facultyDashboard, name='teacher_dashboard'),
@@ -18,6 +18,5 @@ urlpatterns = [
     path('marks-mst1/', marks_mst1, name='mst1' ),
     path('marks-mst2/', marks_mst2, name='mst2' ),
     path('marks-assmarks/', marks_assign, name='assmarks' ),
-    path('attendance/', attendance_list, name='attendance' ),
     path('messages/', teacher_messages, name='teacher_messages' ),
 ]

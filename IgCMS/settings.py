@@ -1,5 +1,5 @@
 from pathlib import Path
-import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +16,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# Application definitmyappion
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,6 +57,26 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'IgCMS.urls'
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_BEAT_SCHEDULE = {
+    'attendance_rk': {
+        'task': 'Admin.tasks.get_Attendance',
+        'schedule': timedelta(minutes=1),
+    },
+}
+
+FACE_RECOGNITION_ITERATIONS = 10
+TEST_ATTENDANCE = False
+
+TIME_RANGE_ORDER = [
+    '09:00 AM - 10:00 AM',
+    '10:00 AM - 11:00 AM',
+    '12:00 PM - 01:00 PM',
+    '02:00 PM - 03:00 PM',
+    '03:00 PM - 04:00 PM',
+    '04:00 PM - 05:00 PM'
+] # This is the order of the time range in the timetable
 
 TEMPLATES = [
     {
@@ -116,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

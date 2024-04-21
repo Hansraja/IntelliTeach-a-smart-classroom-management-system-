@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from Admin.models import AuthUser, Faculty, Student
 from django.core.mail import send_mail
+import datetime
 # Create your models here.
 
 class Teacher_Messages(models.Model):
@@ -82,6 +83,8 @@ class Student_Marks(models.Model):
     def __str__(self):
         return f"{self.student.user.get_full_name()} marks" # type: ignore
     
+from collections import defaultdict
+
 class Time_Table(models.Model):
     DAY_CHOICES = (
         ('Monday', 'Monday'),
@@ -90,14 +93,10 @@ class Time_Table(models.Model):
         ('Thursday', 'Thursday'),
         ('Friday', 'Friday'),
     )
-    teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teacher_timetable', null=True, blank=True)
     day = models.CharField(max_length=255, choices=DAY_CHOICES, blank=True, null=True)
-    date = models.DateField(blank=True, null=True)
     time_from = models.TimeField(blank=True, null=True)
     time_to = models.TimeField(blank=True, null=True)
     subject = models.CharField(max_length=255, blank=True, null=True)
-    class_name = models.CharField(max_length=255, blank=True, null=True)
-    section = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -105,17 +104,7 @@ class Time_Table(models.Model):
         db_table = 'time_table'
 
     def __str__(self):
-        return self.teacher.user.first_name + ' ' + self.teacher.user.last_name + ' timetable' # type: ignore
-
-    @staticmethod
-    def get_table_structure():
-        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-        table_structure = {}
-        for day in days:
-            classes = Time_Table.objects.filter(day=day)
-            table_structure[day] = [c.class_name for c in classes]
-        return table_structure
-    
+        return self.day
 
 class Attendance(models.Model):
     teacher = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teacher_attendance', null=True, blank=True)
@@ -129,10 +118,32 @@ class Attendance(models.Model):
         db_table = 'attendance'
 
     def __str__(self):
-        return self.teacher.user.first_name + ' ' + self.teacher.user.last_name + ' attendance' # type: ignore        def calculate_student_attendance_percentage(student_id):
+        return self.student.user.get_full_name()
 
-    def calculate_student_attendance_percentage(self, student_id): 
-        total_classes = Time_Table.objects.count()
-        attended_classes = Attendance.objects.filter(student_id=student_id, status=True).count()
-        attendance_percentage = (attended_classes / total_classes) * 100
+    def calculate_student_attendance_percentage(self, subject=None): 
+        queryset = Attendance.objects.filter(student=self.student)
+        if subject:
+            queryset = queryset.filter(time__subject=subject)
+        total_classes_attended = queryset.filter(status=True).count()
+        total_classes = queryset.count()
+        if total_classes == 0:
+            return 0
+        attendance_percentage = (total_classes_attended / total_classes) * 100
         return attendance_percentage
+
+    def calculate_student_marks(self, subject=None):
+        attendance_percentage = self.calculate_student_attendance_percentage(subject)
+        if attendance_percentage >= 96:
+            return 6
+        elif 91 <= attendance_percentage <= 95:
+            return 5
+        elif 86 <= attendance_percentage <= 90:
+            return 4
+        elif 81 <= attendance_percentage <= 85:
+            return 3
+        elif 76 <= attendance_percentage <= 80:
+            return 2
+        elif attendance_percentage < 76:
+            return 1
+        else:
+            return 0
