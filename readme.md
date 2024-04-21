@@ -22,18 +22,35 @@ The Classroom Management System is a software application designed to streamline
 7. Generate reports and analyze data
 
 
-To generate Tailwind CSS, run the following command:
-
-```bash
- npx tailwindcss -i input.css -o ./Home/static/public/css/base.css --watch
- ```
-
-
 # Requirements
 
 To set up the project, you will need to install the dependencies listed in the `req.txt` file. You can do this by running the following command:
 
 ```bash 
 pip install -r req.txt
+
+sudo apt install rabbitmq-server
 ```
 
+To generate Tailwind CSS, run the following command:
+
+```bash
+ npx tailwindcss -i input.css -o ./Home/static/public/css/base.css --watch
+```
+
+
+# Running the Application
+
+To run the application, you will need to start the Django development server by running the following command:
+
+```bash
+python manage.py runserver
+```
+
+You will also need to start the Celery worker and beat processes by running the following commands:
+
+```bash
+celery -A IgCMS worker
+
+celery -A IgCMS beat
+```
