@@ -11,7 +11,7 @@ from django.conf import settings
 
 def student(request, context={}):
     if request.method == 'POST':
-        if not request.user.is_faculty or not request.user.is_hod:
+        if not request.user.is_faculty and not request.user.is_hod:
             return redirect('home')
         first_name = request.POST.get('first_name', None)
         last_name = request.POST.get('last_name', None)
@@ -53,7 +53,7 @@ def student(request, context={}):
 
 
 def update_student(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     if request.method == 'POST':
         student_id = request.POST.get('id', None)
@@ -91,7 +91,7 @@ def update_student(request):
     return render(request, 'student/index.html', context=context)
 
 def delete_student(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     if request.method == 'POST':
         student_id = request.POST.get('id', None)
@@ -153,7 +153,7 @@ def student_topics(request):
 @login_required
 def student_enquiry(request):
     if request.method == 'POST':
-        if not request.user.is_faculty or not request.user.is_hod:
+        if not request.user.is_faculty and not request.user.is_hod:
             return redirect('home')
         title = request.POST.get('title', None)
         description = request.POST.get('description', None)

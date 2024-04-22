@@ -34,19 +34,19 @@ def facultyDashboard(request):
 
 
 def faculty_Profile(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     context = {'title': title, 'menuItems': menu }
     return render(request, 'settings/profile.html', context=context)
 
 def add_student(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     context = {'title': f'Add Students - {settings.APP_NAME}', 'menuItems': menu }
     return render(request, 'faculty/add_students.html', context=context)
 
 def teachers_list(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     title = f'Teachers - {settings.APP_NAME}'
     if request.method == 'POST':
@@ -86,7 +86,7 @@ def teachers_list(request):
 
 
 def update_teacher(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     if request.method == 'POST':
         _id = request.POST.get('id', None)
@@ -129,7 +129,7 @@ def update_teacher(request):
     return render(request, 'teachers.html', context=context)
 
 def delete_teacher(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     if request.method == 'POST':
         _id = request.POST.get('id', None)

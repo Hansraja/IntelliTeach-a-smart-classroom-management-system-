@@ -120,7 +120,7 @@ def add_notice(request):
 from django.core.mail import send_mail
 @login_required(login_url='home')
 def delete_notice(request, id):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     try:
         send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject='Hello Email from IntelliTeach',  recipient_list=['ravikantsaini047@gmail.com'], message='Hello I am From IntelliTeach')
@@ -134,7 +134,7 @@ def delete_notice(request, id):
 @login_required(login_url='home')
 def time_table(request):
     if request.method == 'POST':
-        if not request.user.is_faculty or not request.user.is_hod:
+        if not request.user.is_faculty and not request.user.is_hod:
             return redirect('home')
         day = request.POST.get('day', None)
         time_from = request.POST.get('from', None)
@@ -190,7 +190,7 @@ def time_table(request):
 
 
 def update_time_table(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     if request.method == 'POST':
         data = request.body
@@ -237,7 +237,7 @@ def update_time_table(request):
 
 
 def attendance_view(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     att = Attendance.objects.all()
     attendance_records = Attendance.objects.all()   
@@ -309,7 +309,7 @@ def attendance_view(request):
 
 
 def one_attendance_view(request, id):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     try:
         tm = Time_Table.objects.get(subject=unquote(id))

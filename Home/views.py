@@ -222,7 +222,7 @@ def marks_assign(request):
     return HttpResponseBadRequest('Invalid Request')
 
 def teacher_messages(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     messages = Teacher_Messages.objects.all()
     context = {'title': 'Teacher Messages', 'messages': messages,}
@@ -238,7 +238,7 @@ def hellj(request):
 
 
 def attendance_runner(request):
-    if not request.user.is_faculty or not request.user.is_hod:
+    if not request.user.is_faculty and not request.user.is_hod:
         return redirect('/')
     if request.method == 'POST':
         try:
