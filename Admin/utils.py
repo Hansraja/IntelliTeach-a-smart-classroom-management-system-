@@ -148,4 +148,4 @@ def set_attendance(force=False):
             return Attendance.objects.filter(time=t, created_at__date=attendance_date)
 
     print("No classes scheduled for today.")
-    return None
+    return 'No classes scheduled for today'

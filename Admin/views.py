@@ -239,74 +239,39 @@ def update_time_table(request):
 def attendance_view(request):
     if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
-    att = Attendance.objects.all()
-    attendance_records = Attendance.objects.all()   
-    time_table_qs = Time_Table.objects.all()
-
-    # Create lists to store data for each column
-    days = []
-    dates = []
-    subjects = []
-    time_ranges = []
-
-    # Populate lists with time table data
-    for tt in time_table_qs:
-        days.append(tt.day)
-        dates.append(tt.created_at.date())
-        subjects.append(tt.subject)
-        time_range = f"{tt.time_from.strftime('%I:%M %p') if tt.time_from else ''} - {tt.time_to.strftime('%I:%M %p') if tt.time_to else ''}"
-        time_ranges.append(time_range)
-
-    # Create DataFrame for time table
-    time_table_df = pd.DataFrame({
-        'Day': days,
-        'Date': dates,
-        'Subject': subjects,
-        'Time Range': time_ranges
-    })
-
-    def add_link(row):
-        day = row['Day']
-        date = row['Date']
-        subject = row['Subject']
-        time_range = row['Time Range']
-        link = f'<button class="btn btn-info btn-sm"> <a href="/attendance/{quote(string=subject)}" target="_blank">View</a> </button>'
-        return link
     
-    time_table_df['View'] = time_table_df.apply(add_link, axis=1)
+     # Get all attendance records
+    attendance_records = Attendance.objects.all()
+    
+    # Create a dictionary to store unique combinations of date and subject
+    attendance_dict = {}
 
-    # # Get unique dates from the attendance records
-    # dates = sorted(set(attendance_record.created_at.date() for attendance_record in attendance_records))
+    # Populate the dictionary with attendance data
+    for attendance in attendance_records:
+        key = (attendance.created_at.date(), attendance.time.subject)
+        if key not in attendance_dict:
+            attendance_dict[key] = {
+                'Day': attendance.time.day,
+                'Date': attendance.created_at.date(),
+                'Subject': attendance.time.subject,
+                'Time Range': f"{attendance.time.time_from.strftime('%I:%M %p') if attendance.time.time_from else ''} - {attendance.time.time_to.strftime('%I:%M %p') if attendance.time.time_to else ''}",
+                'View': f'<a href="/attendance/{quote(string=attendance.time.subject)}" target="_blank">  <button class="btn btn-info btn-sm"> View </button> </a>'
+            }
 
-    # # Create a DataFrame with student names as index and dates as columns
-    # student_names = [attendance.student.user.get_full_name() for attendance in attendance_records]
-    # attendance_df = pd.DataFrame(index=student_names, columns=dates)
+    # Convert dictionary values to a list of dictionaries
+    attendance_data = list(attendance_dict.values())
 
-    # # Fill the DataFrame with 'P' for present and 'A' for absent
-    # for attendance in attendance_records:
-    #     date = attendance.created_at.date()
-    #     student_name = attendance.student.user.get_full_name()
-    #     attendance_df.at[student_name, date] = 'P' if attendance.status else 'A'
+    # Create DataFrame from the list of dictionaries
+    attendance_df = pd.DataFrame(attendance_data)
 
-    # # Fill missing values with 'A' (Absent)
-    # attendance_df.fillna('A', inplace=True)
+    # Convert DataFrame to HTML
+    attendance_table = attendance_df.to_html(classes='table table-bordered', na_rep='', index_names=False, justify='center', escape=False, index=False)
+    context = {
+        'attendance': attendance_table,
+        'title': f'Attendance - {settings.APP_NAME}'
+    }
 
-    # # Populate the DataFrame according to the time table
-    # for tt in time_table:
-    #     date = tt.created_at.date()
-    #     subject = tt.subject
-    #     time_from = tt.time_from
-    #     time_to = tt.time_to
-    #     attendance_df[f"{date} {time_from} - {time_to} ({subject})"] = ' '
-
-    # time_table = Time_Table.objects.all()
-
-    # attendance_records = Attendance.objects.all()
-
-    att = time_table_df.to_html(classes='table table-bordered', na_rep='', index_names=True, justify='center', escape=False)
-    context = {'attendance': att, 'title': f'Attendance - {settings.APP_NAME}'}
     return render(request=request, template_name='settings/attendance-list.html', context=context)
-
 
 def one_attendance_view(request, id):
     if not request.user.is_faculty and not request.user.is_hod:
