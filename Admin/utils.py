@@ -114,7 +114,7 @@ def recognize_faces():
 def set_attendance(force=False):
     day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     current_day_index = timezone.now().weekday()
-    current_day = day[current_day_index] if settings.TEST_ATTENDANCE else day[0]
+    current_day = day[current_day_index]
 
     tm = Time_Table.objects.filter(day=current_day)
     current_time = timezone.localtime().time()
@@ -124,15 +124,15 @@ def set_attendance(force=False):
         if t.time_from <= current_time <= t.time_to and current_time >= time_from_plus_10 :
             attendance_date = datetime.now().date()
             attendance_entries = Attendance.objects.filter(time=t, created_at__date=attendance_date)
-            for attendance_entry in attendance_entries:
-                if attendance_entry.created_at < timezone.now() - timedelta(minutes=10):
-                    return attendance_entries
+            # for attendance_entry in attendance_entries:
+            #     if attendance_entry.created_at < timezone.now() - timedelta(minutes=10):
+            #         return attendance_entries
             if attendance_entries.exists() and not force:
                 data = recognize_faces()
                 for d in data:
                     student = Student.objects.get(roll_number=d['roll_no'])
                     attendance_entry = attendance_entries.filter(student=student).first()
-                    if attendance_entry:
+                    if attendance_entry and attendance_entry.status is False:
                         attendance_entry.status = d['status']
                         attendance_entry.save()
             else:
