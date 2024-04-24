@@ -126,8 +126,8 @@
                             </div>
                         </a>
                         <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow-sm animated--grow-in user-profile-menu"
-                            aria-labelledby="userDropdown" style="left: -150px !important;">
+                        <div class="dropdown-menu rb-dropdown dropdown-menu-right shadow-sm animated--grow-in user-profile-menu"
+                            aria-labelledby="userDropdown" >
                             <div class="px-4 py-6" role="none">
                                 <div class="flex mb-1 justify-start items-center">
                                     <div class="mr-5">
@@ -142,11 +142,11 @@
                                         </p>
                                     </div>
                                 </div>
-                                <p class="text-sm mt-2 max-w-[200px] font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                <p class="text-sm mt-2 font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                                     {{ user.email }}
                                 </p>
                                 {%if user.is_student %}
-                                    <p class="text-sm mt-3 max-w-[200px] text-gray-900 truncate dark:text-gray-300" role="none">
+                                    <p class="text-sm mt-3 text-gray-900 truncate dark:text-gray-300" role="none">
                                       <span class="font-semibold">Roll No: </span> {{ user.student.roll_number }}
                                     </p>
                                     <p class="text-sm mt-1 max-w-[200px] text-gray-900 truncate dark:text-gray-300" role="none">

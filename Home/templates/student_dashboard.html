@@ -15,7 +15,14 @@
     </main>
 
     <div class="modal fade" id="addQueries" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateStudentLable" aria-hidden="true">
-        <div class="modal-dialog">
+        <div cla<div class="flex flex-col justify-center" >
+            <p class="text-sm font-extrabold text-gray-900 dark:text-white" role="none">
+                {{ user.get_full_name }}
+            </p>
+            <p class="text-sm text-gray-900 truncate dark:text-gray-300" role="none">
+                {%if user.is_faculty %} {{ user.faculty.subject }} {% elif user.is_student %} Student {% else %} Admin {% endif %}
+            </p>
+        </div>ss="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="updateStudentLable">Student Enquiry</h1>

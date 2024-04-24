@@ -6,9 +6,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from Admin.models import Student, Faculty
+from Admin.views import get_html_time_table
 from student.models import Student_Query
 from Home.models import Student_Notice, Attendance, Student_Marks, Teacher_Messages, Time_Table
-import datetime
 
 def home_login(request):
     if request.user.is_authenticated: # type: ignore
@@ -19,8 +19,15 @@ def home_login(request):
             marks = Student_Marks.objects.filter(student_id=student.id,)
             notices = Student_Notice.objects.filter().order_by('-created_at') # type: ignore
             queries = Student_Query.objects.filter(student_id=request.user.student.id).order_by('-created_at') # type: ignore
+            html_table = get_html_time_table()
+            att = Attendance.objects.filter(student=student)
+            att_error = False
+            if att:
+                att = att[0]
+                att_percentage = att.calculate_student_attendance_percentage()
+                att_error = True if att_percentage < 75 else False
             title = 'Student Dashboard'
-            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks})
+            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks, 'html_table': html_table, 'att_error': att_error})
         elif request.user.is_hod:
             return redirect('admin_dashboard')
         else:
@@ -72,12 +79,15 @@ def home_login(request):
 
 @login_required(login_url='/')
 def studentDashboard(request):
+    '''
+        Used, but not usefull, because we have used home_login() instead of this...
+    '''
     if not request.user.is_student:
         return redirect('/')
     notices = Student_Notice.objects.filter().order_by('-created_at') # type: ignore
     queries = Student_Query.objects.filter(student_id=request.user.student.id, ).order_by('-created_at') # type: ignore
     title = 'Student Dashboard'
-    return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices, })
+    return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices, 'html_table': html_table })
 
 def Images(request, path: str):
     file_path = os.path.join(settings.MEDIA_ROOT, path)
@@ -236,15 +246,14 @@ def hellj(request):
     print(value)
     return HttpResponse(f'Face Detection Completed, {value}')
 
-
+from django.http import JsonResponse
 def attendance_runner(request):
-    if not request.user.is_faculty and not request.user.is_hod:
-        return redirect('/')
-    if request.method == 'POST':
-        try:
-            value = set_attendance()
-            return HttpResponse(f'Face Detection Completed, {value}')
-        except Exception as e:
-            print(e, 'Got error while running attendance ...')
-            return HttpResponseServerError('Something went wrong')
-    return HttpResponseBadRequest('Invalid Request')
+    if not request.user.is_hod:
+        return JsonResponse({'error': "Sorry, you can request on this endpoint!!"})
+    
+    value = set_attendance()
+    if value:
+        response_data = {'result': value, 'success': True}
+    else: 
+        response_data = {'result': 'Something Went Wrong!', 'success': False}       
+    return JsonResponse(response_data)

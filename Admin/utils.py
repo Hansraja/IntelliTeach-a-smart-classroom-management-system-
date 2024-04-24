@@ -76,6 +76,11 @@ def recognize_faces():
                         res.append({'roll_no': roll_number, 'name': name, 'status': False})
 
                 iteration += 1
+
+            ''' Below code is for displaying the recognized faces on the screen
+            and marking them with green, red or blue rectangles based on their status.
+            But its not working properly, so commented it for now.
+            '''
             # for (top, right, bottom, left), re in zip(face_locations, res):
             #     status = None
             #     for student_info, embd in zip(res, embeddings):
@@ -145,7 +150,7 @@ def set_attendance(force=False):
                         time=t,
                         status=d['status']
                     )
-            return Attendance.objects.filter(time=t, created_at__date=attendance_date)
+            return  'Attendance Added Successfuly!!'
 
     print("No classes scheduled for today.")
     return 'No classes scheduled for today'

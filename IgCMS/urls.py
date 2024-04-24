@@ -22,7 +22,7 @@ from Admin.views import admin_dashboard, update_password, logout, time_table, up
 from teachers.views import teachers_list, delete_teacher, update_teacher
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls), # This is the default admin url, we are using custom admin url
     path('', include('Home.urls')),
     path('dashboard/', include('teachers.urls')),
     path('', include('student.urls')),

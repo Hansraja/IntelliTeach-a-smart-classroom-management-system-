@@ -74,11 +74,24 @@ class Student_Marks(models.Model):
     def send_to_email(self):
         pass
 
+    def get_att_marks(self):
+        try:
+            att = Attendance.objects.get(student=self.student)
+            return att.calculate_student_marks(subject=self.teacher.subject)
+        except:
+            return 0
+
     def get_total_marks(self):
         mst1 = int(self.mst1) if self.mst1 else 0
         mst2 = int(self.mst2) if self.mst2 else 0
         assignment = int(self.assignment) if self.assignment else 0
-        return mst1 + mst2 + assignment
+        att = self.get_att_marks()
+        total_marks = settings.TOTAL_MARKS if settings.TOTAL_MARKS else 1  # Handle division by zero
+        proft = mst1 + mst2 + assignment + att
+        percentage = (proft / total_marks) * 100
+    
+        return percentage
+
 
     def __str__(self):
         return f"{self.student.user.get_full_name()} marks" # type: ignore

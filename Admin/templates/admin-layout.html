@@ -96,7 +96,7 @@
                 {% endif %}
                 {% if user.is_faculty %}
                     <li>
-                        <a href="{% url "attendance" %}"
+                        <a href="{% url "attendance_one" user.faculty.subject %}"
                             class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
                             aria-controls="dropdown-layouts" data-collapse-toggle="dropdown-layouts">
                             <svg class="flex-shrink-0 w-6 h-6 !text-gray-800 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
@@ -113,7 +113,7 @@
             </div>
             {% if user.is_hod %}
             <div class="mt-4 pt-4 space-y-2">
-                <a href="{% url "run_att" %}" class="flex items-center !bg-blue-200 justify-center dark:!bg-slate-900 rounded-full hover:!shadow-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
+                <a href="" data-bs-toggle="modal" data-bs-target="#faceRecog" class="flex items-center !bg-blue-200 justify-center dark:!bg-slate-900 rounded-full hover:!shadow-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700">
                   <span class="font-bold cheltenham" >Get Attendance</span>
                 </a>
               </div>
@@ -170,6 +170,68 @@
         </div>
     </div>
 </div>
+
+{% if user.is_hod%}
+<div class="modal fade" id="faceRecog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="FaceRecognize" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="msgDt">
+                    </div>
+                    <div id="faceDete" class="face-recognition-animation mx-auto my-4"></div>
+                    
+                    <div class="flex space-x-2 items-center">
+                    <button id="closeModalBtn" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="startRecognitionBtn" class="btn btn-primary">Start Recognition</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('startRecognitionBtn').addEventListener('click', function() {
+        let clbt = document.getElementById('closeModalBtn')
+        let flbt = document.getElementById("faceDete")
+        let msg = document.getElementById('msgDt')
+        try{
+            clbt.disabled = true;
+            flbt.classList.add('active');
+    
+        fetch('{% url "run_att" %}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success ){
+                    msg.innerHTML = `
+                        <div class="alert alert-success" role="alert">
+                           ${data.result}
+                        </div>
+                    `;
+                    flbt.classList.remove('active');
+                } else {
+                    throw new Error('Face recognization falied')
+                    flbt.classList.remove('active');
+                }
+            })
+            .catch(error => {
+                msg.innerHTML = `
+                        <div class="alert alert-danger" role="alert">
+                           ${error}
+                        </div>
+                    `;
+            })
+            .finally(() => {
+        });}
+        catch{
+            console.log("got error")
+        } finally{
+            clbt.disabled = false;       
+        }
+    });
+</script>
+
+{% endif %}
 
 <script>
     const toggle = document.getElementById("toggleSidebarMobile");

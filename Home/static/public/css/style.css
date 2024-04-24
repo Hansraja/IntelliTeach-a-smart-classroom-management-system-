@@ -144,3 +144,57 @@ body {
 input {
     border-radius: 5px !important;
 }
+
+.rb-dropdown {
+    left: -100px !important;
+    max-width: 250px !important;
+    min-width: 210px !important;
+}
+
+/* .rb-notice {
+    min-width: 250px;
+    z-index: 1041;
+    position: fixed;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+    position: sticky;
+} 
+
+@media (max-width: 768px) {
+    .rb-notice {
+        position: relative;
+        max-height: auto;
+        height: auto;
+        overflow-y: visible;
+    }
+} */
+
+
+/* Add this CSS to your existing stylesheet or create a new one */
+
+@keyframes faceRecognitionAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.face-recognition-animation {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    background-color: #007bff; /* Change color as needed */
+    border-radius: 50%;
+    animation: faceRecognitionAnimation 1.5s infinite;
+    display: none;
+    visibility: hidden;
+}
+
+.active {
+    display: block !important;
+    visibility: visible !important;
+}

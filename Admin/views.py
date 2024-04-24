@@ -131,28 +131,12 @@ def delete_notice(request, id):
         print(e)
         return redirect('home')
     
-@login_required(login_url='home')
-def time_table(request):
-    if request.method == 'POST':
-        if not request.user.is_faculty and not request.user.is_hod:
-            return redirect('home')
-        day = request.POST.get('day', None)
-        time_from = request.POST.get('from', None)
-        time_to = request.POST.get('to', None)
-        subject = request.POST.get('subject', None)
-        try:
-            Time_Table.objects.create(day=day, time_from=time_from, time_to=time_to, subject=subject)
-            return redirect('time_table')
-        except Exception as e:
-            print(e)
-            return redirect('time_table')
-    
-     # Query the Time_Table objects
+
+def get_html_time_table():
     time_table_objects = Time_Table.objects.all() or []
 
     if not time_table_objects:
-        return render(request=request, template_name='table.html', context={'title': f'Time Table - {settings.APP_NAME}'})
-    
+        return None
     # Create a DataFrame from the queryset
     df = pd.DataFrame(list(time_table_objects.values('day', 'time_from', 'time_to', 'subject')))
 
@@ -183,7 +167,28 @@ def time_table(request):
     df_pivot = df_pivot.reindex(day_order)
 
     # Generate HTML table
-    html_table = df_pivot.to_html(classes='table table-bordered', na_rep='', index_names=False, justify='center')
+    return df_pivot.to_html(classes='table table-bordered', na_rep='', index_names=False, justify='center')
+    
+@login_required(login_url='home')
+def time_table(request):
+    if request.method == 'POST':
+        if not request.user.is_faculty and not request.user.is_hod:
+            return redirect('home')
+        day = request.POST.get('day', None)
+        time_from = request.POST.get('from', None)
+        time_to = request.POST.get('to', None)
+        subject = request.POST.get('subject', None)
+        try:
+            Time_Table.objects.create(day=day, time_from=time_from, time_to=time_to, subject=subject)
+            return redirect('time_table')
+        except Exception as e:
+            print(e)
+            return redirect('time_table')
+    
+    html_table = get_html_time_table()
+
+    if not html_table:
+        return render(request=request, template_name='table.html', context={'title': f'Time table - {settings.APP_NAME}', 'emp': True})
 
     context = {'html_table': html_table, 'title': f'Time table - {settings.APP_NAME}',}
     return render(request=request, template_name='table.html', context=context)
