@@ -151,26 +151,43 @@ input {
     min-width: 210px !important;
 }
 
-/* .rb-notice {
+.rb-notice {
     min-width: 250px;
-    z-index: 1041;
     position: fixed;
-    max-height: calc(100vh - 130px);
-    overflow-y: auto;
-    position: sticky;
+    overflow-y: hidden;
 } 
+
+.rb-nt-sc {
+    position: relative;
+    max-height: calc(100vh - 200px);
+    min-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.z-i9999 {
+    z-index: 9999;
+}
+
+.rb-tbh, .rb-tbh th, .rb-tbh td {
+    background-color: #faf3f3 !important;
+    color: #352d2d;
+}
+
+@media(min-width: 576px) {
+    .rb-mdl {
+        max-width: fit-content !important;
+    }
+}
 
 @media (max-width: 768px) {
     .rb-notice {
         position: relative;
         max-height: auto;
         height: auto;
+        overflow-x: hidden;
         overflow-y: visible;
     }
-} */
-
-
-/* Add this CSS to your existing stylesheet or create a new one */
+}
 
 @keyframes faceRecognitionAnimation {
     0% {
