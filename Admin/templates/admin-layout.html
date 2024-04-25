@@ -195,11 +195,13 @@
         let clbt = document.getElementById('closeModalBtn')
         let flbt = document.getElementById("faceDete")
         let msg = document.getElementById('msgDt')
+        let rlbt = document.getElementById('startRecognitionBtn')
         try{
             clbt.disabled = true;
             flbt.classList.add('active');
-    
-        fetch('{% url "run_att" %}')
+            rlbt.disabled = true;
+
+            fetch('{% url "run_att" %}')
             .then(response => response.json())
             .then(data => {
                 if (data.success ){
@@ -209,10 +211,10 @@
                         </div>
                     `;
                     flbt.classList.remove('active');
-                } else {
+            } else {
                     throw new Error('Face recognization falied')
                     flbt.classList.remove('active');
-                }
+        }
             })
             .catch(error => {
                 msg.innerHTML = `
@@ -222,14 +224,15 @@
                     `;
             })
             .finally(() => {
+                clbt.disabled = false;
+                rlbt.disabled = false;
         });}
         catch{
             console.log("got error")
-        } finally{
-            clbt.disabled = false;       
-        }
+        } 
     });
 </script>
+
 
 {% endif %}
 

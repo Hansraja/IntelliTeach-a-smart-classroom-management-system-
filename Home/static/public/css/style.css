@@ -173,10 +173,35 @@ input {
     color: #352d2d;
 }
 
+.rb-c-chart {
+    width: 250px !important;
+    height: 250px !important;
+}
+
+.rb-l-chart {
+    width: auto !important;
+    height: 250px !important;
+}
+
 @media(min-width: 576px) {
     .rb-mdl {
         max-width: fit-content !important;
     }
+}
+
+.rb-lex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.rb-pic {
+    width: 48px;
+    height: 48px;
+    border-radius: 1000px;
+    object-fit: cover;
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
@@ -187,6 +212,20 @@ input {
         overflow-x: hidden;
         overflow-y: visible;
     }
+    .rb-l-chart {
+        width: 100% !important;
+        height: 250px !important;
+    }
+    .rb-lex {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+}
+
+img {
+    object-fit: cover;
 }
 
 @keyframes faceRecognitionAnimation {

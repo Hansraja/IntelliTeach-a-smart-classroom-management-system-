@@ -22,12 +22,24 @@ def home_login(request):
             html_table = get_html_time_table()
             att = Attendance.objects.filter(student=student)
             att_error = False
+            att_percentage = 0
             if att:
                 att = att[0]
                 att_percentage = att.calculate_student_attendance_percentage()
                 att_error = True if att_percentage < 75 else False
+
+            from collections import defaultdict # import defaultdict
+            marks_by_subject = defaultdict(list)
+
+            for mark in marks:
+                subject = mark.teacher.subject
+                total_marks = mark.get_total_marks()
+                if total_marks > 40:
+                    total_marks = -1  # If total marks are greater than 40, set to -1
+                marks_by_subject[subject].append(total_marks)
+
             title = 'Student Dashboard'
-            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks, 'html_table': html_table, 'att_error': att_error})
+            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks, 'html_table': html_table, 'att_error': att_error, 'att_percentage': att_percentage, 'marks_by_subject': marks_by_subject})
         elif request.user.is_hod:
             return redirect('admin_dashboard')
         else:
@@ -87,7 +99,7 @@ def studentDashboard(request):
     notices = Student_Notice.objects.filter().order_by('-created_at') # type: ignore
     queries = Student_Query.objects.filter(student_id=request.user.student.id, ).order_by('-created_at') # type: ignore
     title = 'Student Dashboard'
-    return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices, 'html_table': html_table })
+    return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices})
 
 def Images(request, path: str):
     file_path = os.path.join(settings.MEDIA_ROOT, path)
@@ -120,7 +132,7 @@ def marks_list(request):
                     student_marks = Student_Marks.objects.filter(student_id=student.id, teacher_id=teacher.id)
                     if student_marks:
                         student_marks.delete()
-                    marks = Student_Marks(student=student, teacher=teacher, mst1=m1, mst2=m2, assignment=a)
+                    marks = Student_Marks(student=student, teacher=teacher, mst1=m1 if m1 else None, mst2=m2 if m2 else None, assignment=a if a else None)
                     marks.save()
                 return redirect('marks')
             else:

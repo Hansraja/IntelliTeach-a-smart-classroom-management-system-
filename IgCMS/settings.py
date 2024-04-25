@@ -62,11 +62,13 @@ CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_BEAT_SCHEDULE = {
     'attendance_rk': {
         'task': 'Admin.tasks.get_Attendance',
-        'schedule': timedelta(minutes=1),
+        'schedule': timedelta(minutes=3),
     },
 }
 
 FACE_RECOGNITION_ITERATIONS = 10
+FACE_RECOGNITION_THRESHOLD = 0.6
+FACE_RECOGNITION_TIMEOUT = 120
 TEST_ATTENDANCE = False
 TOTAL_MARKS = 100
 

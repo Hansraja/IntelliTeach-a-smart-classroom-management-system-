@@ -12,8 +12,8 @@ def get_Attendance():
         if should_process_attendance():
             process_attendance()
         
-def should_process_attendance(time_table_object=None):
+def should_process_attendance():
     return True
 
-def process_attendance(time_table_object=None):
-    set_attendance()
+def process_attendance():
+    set_attendance(time=300)

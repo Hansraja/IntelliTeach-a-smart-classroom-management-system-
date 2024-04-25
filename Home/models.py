@@ -87,10 +87,8 @@ class Student_Marks(models.Model):
         assignment = int(self.assignment) if self.assignment else 0
         att = self.get_att_marks()
         total_marks = settings.TOTAL_MARKS if settings.TOTAL_MARKS else 1  # Handle division by zero
-        proft = mst1 + mst2 + assignment + att
-        percentage = (proft / total_marks) * 100
-    
-        return percentage
+        proft = (mst1 if mst1 else 0 + mst2 if mst2 else 0) / 2 + (assignment if assignment else 0 + att)    
+        return proft
 
 
     def __str__(self):

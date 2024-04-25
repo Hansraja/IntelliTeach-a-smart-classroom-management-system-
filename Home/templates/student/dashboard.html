@@ -94,6 +94,55 @@
   </div>
 </div>
 
+<div class="mt-5 rb-lex" >
+  <div>
+  <canvas id="attendanceChart" class="rb-c-chart" width="100" height="100"></canvas>
+  <p class="text-center mt-2">Attendance</p>
+  <script>
+    var att_percentage = {{ att_percentage }};
+    var ctx = document.getElementById('attendanceChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Present', 'Absent'],
+            datasets: [{
+                data: [att_percentage, 100 - att_percentage],
+                backgroundColor: [
+                    'lightblue', // Color for attendance percentage
+                    'lightgray'   // Color for remaining percentage
+                ],
+                borderWidth: 0
+            }]
+        },
+    });
+</script>
+</div>
+<div>
+<canvas id="marksChart" width="400" height="250" class="rb-l-chart"></canvas>
+<p class="text-center mt-2">Marks</p>
+  <script>
+    const labels = [{% for mark in marks %}'{{ mark.teacher.subject }}',{% endfor %}];
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'Total Marks',
+        data: [{% for mark in marks %}{{ mark.get_total_marks }},{% endfor %}],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    };
+      var ctx = document.getElementById('marksChart').getContext('2d');
+      var chart = new Chart(ctx, {
+          type: 'line',
+          data: data,
+      });
+  </script>
+</div>
+
+
+</div>
+
 <div class="mt-5 border border-slate-300 overflow-hidden rounded-2xl">
     <div class="mb-4 mt-2 text-xl text-center font-bold cheltenham">
       Your Enquiries
@@ -104,7 +153,7 @@
         <div class="flex flex-col justify-between bg-white dark:bg-slate-800 p-4 mx-4 rounded-xl shadow-sm mb-4">
           <div class="flex justify-between items-center ">
             <div class="flex">
-              <img src="{{ query.student.user.picture.url }}" alt="profile" class="w-12 h-12 rounded-full">
+              <img src="{{ query.student.user.picture.url }}" alt="profile" class="w-12 h-12 rounded-full rb-pic">
               <div class="flex flex-col ml-4">
               <div class="flex items-center space-x-5">
                 <span class="text-xs font-semibold dark:text-gray-400">{{ query.student.user.get_full_name}}</span>
@@ -144,7 +193,7 @@
                         <th>Mst-2 Marks</th>
                         <th>Assignment Marks</th>
                         <th>Attendance Marks</th>
-                        <th>Total Marks (%)</th>
+                        <th>Total Marks</th>
                     </tr>
                 </thead>
                 <tbody>

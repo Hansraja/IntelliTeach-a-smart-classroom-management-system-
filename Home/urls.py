@@ -7,5 +7,6 @@ urlpatterns = [
     path('', studentDashboard, name='student_dashboard'),
     path('add_notice/', add_notice, name='add_notice'),
     path('delete_notice/<int:id>', delete_notice, name='delete_notice'),
-    path('run-attendance-system', attendance_runner, name='run_att')
+    path('run-attendance-system', attendance_runner, name='run_att'),
+    path('stop-attendance-system', attendance_runner, {'stop': True}, name='stop_att')
 ]
