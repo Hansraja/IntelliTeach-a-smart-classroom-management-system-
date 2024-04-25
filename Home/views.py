@@ -29,17 +29,9 @@ def home_login(request):
                 att_error = True if att_percentage < 75 else False
 
             from collections import defaultdict # import defaultdict
-            marks_by_subject = defaultdict(list)
-
-            for mark in marks:
-                subject = mark.teacher.subject
-                total_marks = mark.get_total_marks()
-                if total_marks > 40:
-                    total_marks = -1  # If total marks are greater than 40, set to -1
-                marks_by_subject[subject].append(total_marks)
 
             title = 'Student Dashboard'
-            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks, 'html_table': html_table, 'att_error': att_error, 'att_percentage': att_percentage, 'marks_by_subject': marks_by_subject})
+            return render(request, 'student/dashboard.html', {'title': title, 'queries': queries, 'notices': notices,'marks':marks, 'html_table': html_table, 'att_error': att_error, 'att_percentage': att_percentage})
         elif request.user.is_hod:
             return redirect('admin_dashboard')
         else:
@@ -129,11 +121,14 @@ def marks_list(request):
                     student = Student.objects.get(id=id)
                     if not student:
                         return HttpResponseServerError('Invalid Student')
+                    
                     student_marks = Student_Marks.objects.filter(student_id=student.id, teacher_id=teacher.id)
                     if student_marks:
                         student_marks.delete()
                     marks = Student_Marks(student=student, teacher=teacher, mst1=m1 if m1 else None, mst2=m2 if m2 else None, assignment=a if a else None)
                     marks.save()
+                    mess = f'Hello {student.user.first_name},\n\nYour marks have been updated by {teacher.user.first_name} {teacher.user.last_name}.\n\nMST1: {m1}\nMST2: {m2}\nAssignment: {a}\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.'
+                    student.send_marks_email(mess)
                 return redirect('marks')
             else:
                 return HttpResponseServerError('Invalid Data')
@@ -175,6 +170,7 @@ def marks_mst1(request):
                     else:
                         marks = Student_Marks(student=student, teacher=teacher, mst1=m1)
                         marks.save()
+                    student.send_marks_email(f'Hello {student.user.first_name},\n\nYour MST1 marks have been updated by {teacher.user.first_name} {teacher.user.last_name}.\n\nMST1: {m1}\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.')
                 return redirect('marks')
             else:
                 return HttpResponseServerError('Invalid Data')
@@ -205,6 +201,7 @@ def marks_mst2(request):
                     else:
                         marks = Student_Marks(student=student, teacher=teacher, mst2=m2)
                         marks.save()
+                    student.send_marks_email(f'Hello {student.user.first_name},\n\nYour MST2 marks have been updated by {teacher.user.first_name} {teacher.user.last_name}.\n\nMST2: {m2}\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.')
                 return redirect('marks')
             else:
                 return HttpResponseServerError('Invalid Data')
@@ -235,6 +232,7 @@ def marks_assign(request):
                     else:
                         marks = Student_Marks(student=student, teacher=teacher, assignment=a)
                         marks.save()
+                    student.send_marks_email(f'Hello {student.user.first_name},\n\nYour Assignment marks have been updated by {teacher.user.first_name} {teacher.user.last_name}.\n\nAssignment: {a}\n\n\n\nThis is an auto-generated email by the system and does not support incoming mails. If you have any queries, please reach out to us through your dashboard.')
                 return redirect('marks')
             else:
                 return HttpResponseServerError('Invalid Data')

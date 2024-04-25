@@ -190,6 +190,7 @@ def assignment_list(request):
                     )
                     assignment.questions.add(question)
             assignment.save()
+            assignment.send_assignment_email()
 
             return JsonResponse({'message': 'Assignment added successfully', 'success': True})
         except Exception as e:
@@ -330,6 +331,7 @@ def important_topics(request):
                 attachments=attachments,
                 teacher=teacher,
             )
+            Important_Topics.send_important_topics_email()
             data = Important_Topics.objects.filter(teacher=request.user.faculty)
             context = {'title': f"Important Topics - {settings.APP_NAME}",'topics': data, 'messages': [{'message': 'Topic added successfully', 'tag': 'success'}]}
             return render(request, 'settings/topics.html', context=context)
@@ -375,11 +377,12 @@ def queries(request):
 
             teacher = request.user.faculty
             query = Student_Query.objects.get(pk=int(id))
-            Student_Queries_Answers.objects.create(
+            sq = Student_Queries_Answers.objects.create(
                 student_query=query,
                 teacher=teacher,
                 answer=description,
             )
+            sq.send_succes_mail()
             data = Student_Query.objects.all()
             context = {'template': template, 'title': f"Student Enquiries - {settings.APP_NAME}",'queries': data, 'messages': [{'message': 'Reply added successfully', 'tag': 'success'}]}
             return render(request, 'settings/queries.html', context=context)

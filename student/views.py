@@ -77,6 +77,7 @@ def update_student(request):
             student.mobile = mobile if mobile else student.mobile
             student.user.save()
             student.save()
+            student.user.send_email(subject='Account Update', message='Your account has been updated successfully.')
         except ValidationError as e:
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:

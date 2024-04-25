@@ -112,5 +112,22 @@ class Student(models.Model):
         except:
             pass
 
+    def send_marks_email(self, message: str):
+        subject = f'Marks from {settings.APP_NAME} - Roll No. {self.roll_number}'
+        from_email = 'ikgcms@igcms.com'
+        try:
+            send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject=subject,  recipient_list=[self.user.email], message=message)
+        except:
+            pass
+
+    def send_email(self, subject:str, message: str):
+        subject = f'{subject} from {settings.APP_NAME}'
+        from_email = 'ikgcms@igcms.com'
+        try:
+            send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject=subject,  recipient_list=[self.user.email], message=message)
+        except:
+            pass
+
+
     def __str__(self):
         return self.user.get_full_name()

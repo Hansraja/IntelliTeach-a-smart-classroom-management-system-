@@ -74,6 +74,7 @@ def update_password(request):
                             if password == confirm_password:
                                 user.set_password(password)
                                 user.save()
+                                user.update_password_email(password)
                                 return JsonResponse({'success': True, 'message': 'Password updated successfully'})
                             else:
                                 return JsonResponse({'success': False, 'message': 'New password and confirm password do not match'})
@@ -123,7 +124,6 @@ def delete_notice(request, id):
     if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     try:
-        send_mail(from_email=settings.DEFAULT_FROM_EMAIL,  subject='Hello Email from IntelliTeach',  recipient_list=['ravikantsaini047@gmail.com'], message='Hello I am From IntelliTeach')
         notice = Student_Notice.objects.get(id=int(id))
         notice.delete()
         return redirect('home')

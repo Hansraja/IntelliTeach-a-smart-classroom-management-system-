@@ -60,9 +60,13 @@ ROOT_URLCONF = 'IgCMS.urls'
 
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 CELERY_BEAT_SCHEDULE = {
-    'attendance_rk': {
+    'attendance_runner': {
         'task': 'Admin.tasks.get_Attendance',
         'schedule': timedelta(minutes=3),
+    },
+    'att_email': {
+        'task': 'Admin.tasks.send_attendance_email',
+        'schedule': timedelta(hours=24),
     },
 }
 
