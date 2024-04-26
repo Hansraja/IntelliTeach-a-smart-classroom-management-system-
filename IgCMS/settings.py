@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-5tm(^75*kg(d6=f&nn91-esky50y#0zuqzd87dp^(l@bl^4n5c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definitmyappion
@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'Admin',
 ] 
 
-INSTALLED_APPS += [
+INSTALLED_APPS += [                                                                                                                                                                                     
     'Home',
     'teachers',
     'student'
@@ -77,14 +77,14 @@ TEST_ATTENDANCE = False
 TOTAL_MARKS = 100
 
 TIME_RANGE_ORDER = [
-    '09:00 AM - 10:00 AM',
-    '10:00 AM - 11:00 AM',
-    '12:00 PM - 01:00 PM',
-    '02:00 PM - 03:00 PM',
-    '03:00 PM - 04:00 PM',
-    '04:00 PM - 05:00 PM'
+    # '09:00 AM - 10:00 AM',
+    # '10:00 AM - 11:00 AM',
+    # '11:00 AM - 12:00 PM',
+    # '12:00 PM - 01:00 PM',
+    # '02:00 PM - 03:00 PM',
+    # '03:00 PM - 04:00 PM',
+    # '04:00 PM - 05:00 PM'
 ] # This is the order of the time range in the timetable
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -110,10 +110,10 @@ WSGI_APPLICATION = 'IgCMS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'IgCMS',
+        'NAME': 'IntelliTeach',
         'USER': 'Igcms',
-        'PASSWORD': 'Ig@cms12',
-        'HOST': '8.208.33.217',
+        'PASSWORD': 'Hansraj@1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
