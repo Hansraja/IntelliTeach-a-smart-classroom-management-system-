@@ -161,7 +161,10 @@ def get_html_time_table():
     df_pivot = df.pivot(index='day', columns='time_range', values='subject')
 
     # Reorder columns according to the defined order
-    df_pivot = df_pivot[time_range_order] if time_range_order else df_pivot
+    try:
+        df_pivot = df_pivot[time_range_order] if time_range_order else df_pivot
+    except KeyError:
+        df_pivot = df_pivot
 
     # Sort days
     df_pivot = df_pivot.reindex(day_order)

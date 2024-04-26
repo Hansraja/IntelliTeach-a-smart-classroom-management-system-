@@ -11,12 +11,9 @@ COLLEGE_NAME = 'IntelliTeach'
 SECRET_KEY = 'django-insecure-5tm(^75*kg(d6=f&nn91-esky50y#0zuqzd87dp^(l@bl^4n5c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
-
-
-# Application definitmyappion
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,17 +71,18 @@ FACE_RECOGNITION_ITERATIONS = 10
 FACE_RECOGNITION_THRESHOLD = 0.6
 FACE_RECOGNITION_TIMEOUT = 120
 TEST_ATTENDANCE = False
-TOTAL_MARKS = 100
+TOTAL_MARKS = 40
 
 TIME_RANGE_ORDER = [
-    # '09:00 AM - 10:00 AM',
-    # '10:00 AM - 11:00 AM',
-    # '11:00 AM - 12:00 PM',
-    # '12:00 PM - 01:00 PM',
-    # '02:00 PM - 03:00 PM',
-    # '03:00 PM - 04:00 PM',
-    # '04:00 PM - 05:00 PM'
+    '09:00 AM - 10:00 AM',
+    '10:00 AM - 11:00 AM',
+    '11:00 AM - 12:00 PM',
+    '12:00 PM - 01:00 PM',
+    '02:00 PM - 03:00 PM',
+    '03:00 PM - 04:00 PM',
+    '04:00 PM - 05:00 PM'
 ] # This is the order of the time range in the timetable
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

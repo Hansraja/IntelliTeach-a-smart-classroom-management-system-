@@ -154,8 +154,6 @@ def student_topics(request):
 @login_required
 def student_enquiry(request):
     if request.method == 'POST':
-        if not request.user.is_faculty and not request.user.is_hod:
-            return redirect('home')
         title = request.POST.get('title', None)
         description = request.POST.get('description', None)
         try:

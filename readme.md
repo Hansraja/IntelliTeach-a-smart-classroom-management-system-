@@ -32,11 +32,17 @@ pip install -r req.txt
 sudo apt install rabbitmq-server
 ```
 
-To generate Tailwind CSS, run the following command:
+To collect static files, you will need to run the following command:
 
 ```bash
- npx tailwindcss -i input.css -o ./Home/static/public/css/base.css --watch
+python manage.py collectstatic
 ```
+
+<!-- To generate Tailwind CSS, run the following command: -->
+
+<!-- ```bash
+ npx tailwindcss -i input.css -o ./Home/static/public/css/base.css --watch
+``` -->
 
 
 # Running the Application
@@ -53,4 +59,62 @@ You will also need to start the Celery worker and beat processes by running the 
 celery -A IgCMS worker
 
 celery -A IgCMS beat
+```
+
+To run the application in a production environment, you can use Gunicorn to serve the application. You can do this by running the following command:
+
+```bash
+gunicorn IgCMS.wsgi:application --bind 0.0.0.0:8000
+```
+
+
+# Setup Nginx
+
+install Nginx
+
+```bash
+sudo apt update 
+sudo apt install nginx
+```
+
+To set up Nginx as a reverse proxy server for the application, you will need to create a new server block configuration file in the `/etc/nginx/sites-available/` directory. You can use the following configuration as a template:
+
+```nginx
+server {
+    listen 80;
+    server_name 0.0.0.0;
+
+    # Location for static files
+    location /static/ {
+        alias /home/ravi/Documents/Projects/IgCMS/static;
+    }
+
+    # Location for media files
+    location /media/ {
+        alias /home/ravi/Documents/Projects/IgCMS/media;
+    }
+
+    # Proxy to Gunicorn
+    location / {
+        proxy_pass http://0.0.0.0:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Don't forget to replace the paths with the correct paths for your project.
+
+After creating the configuration file, you will need to create a symbolic link to the `/etc/nginx/sites-enabled/` directory. You can do this by running the following command:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/igcms /etc/nginx/sites-enabled/
+```
+
+Finally, you can restart the Nginx service to apply the changes:
+
+```bash
+sudo systemctl restart nginx
 ```

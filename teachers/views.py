@@ -324,13 +324,13 @@ def important_topics(request):
             if not title:
                 raise Exception('Title is required')
             teacher = request.user.faculty
-            Important_Topics.objects.create(
+            imp = Important_Topics.objects.create(
                 title=title,
                 description=description,
                 attachments=attachments,
                 teacher=teacher,
             )
-            Important_Topics.send_important_topics_email()
+            imp.send_important_topics_email()
             data = Important_Topics.objects.filter(teacher=request.user.faculty)
             context = {'title': f"Important Topics - {settings.APP_NAME}",'topics': data, 'messages': [{'message': 'Topic added successfully', 'tag': 'success'}]}
             return render(request, 'settings/topics.html', context=context)
