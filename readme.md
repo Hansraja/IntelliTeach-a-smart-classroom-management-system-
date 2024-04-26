@@ -27,7 +27,7 @@ The Classroom Management System is a software application designed to streamline
 To set up the project, you will need to install the dependencies listed in the `req.txt` file. You can do this by running the following command:
 
 ```bash 
-pip install -r req.txt
+pip3 install -r req.txt
 
 sudo apt install rabbitmq-server
 ```
@@ -35,7 +35,7 @@ sudo apt install rabbitmq-server
 To collect static files, you will need to run the following command:
 
 ```bash
-python manage.py collectstatic
+python3 manage.py collectstatic
 ```
 
 <!-- To generate Tailwind CSS, run the following command: -->
@@ -50,7 +50,7 @@ python manage.py collectstatic
 To run the application, you will need to start the Django development server by running the following command:
 
 ```bash
-python manage.py runserver
+python3 manage.py runserver
 ```
 
 You will also need to start the Celery worker and beat processes by running the following commands:
@@ -86,12 +86,16 @@ server {
 
     # Location for static files
     location /static/ {
-        alias /home/ravi/Documents/Projects/IgCMS/static;
+        alias /home/ravi/Documents/Projects/IgCMS/static/;
+        autoindex on;
+        index index.html;
     }
 
     # Location for media files
     location /media/ {
-        alias /home/ravi/Documents/Projects/IgCMS/media;
+        alias /home/ravi/Documents/Projects/IgCMS/media/;
+        autoindex on;
+        index index.html;
     }
 
     # Proxy to Gunicorn

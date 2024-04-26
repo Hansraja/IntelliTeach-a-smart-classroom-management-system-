@@ -3,7 +3,7 @@
 
 # Ignore static files
 /staticfiles/
-/static/
+/static/**/
 
 # Ignore media files
 # /media/ 
