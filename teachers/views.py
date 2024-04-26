@@ -4,7 +4,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
 from Home.models import Student_Marks, Student_Notice
-from .utils import menu
 from Admin.models import AuthUser, Faculty, Student
 from teachers.models import AssignMents, Assignment_Questions, Important_Topics
 from student.models import Student_Queries_Answers, Student_Query
