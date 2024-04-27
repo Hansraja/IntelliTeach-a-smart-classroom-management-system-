@@ -70,9 +70,9 @@ CELERY_BEAT_SCHEDULE = {
 FACE_RECOGNITION_ITERATIONS = 10
 FACE_RECOGNITION_THRESHOLD = 0.6
 FACE_RECOGNITION_TIMEOUT = 120
-FACE_RECOGNITION_DAY = 'Monday'
+FACE_RECOGNITION_DAY = 'Monday' # Add 'Auto' to automatically detect the day
 
-TIME_TABLE_WEEKEND_CLASSES = False
+TIME_TABLE_WEEKEND_CLASSES = False # If True, the timetable will be generated for weekend classes
 TOTAL_MARKS = 40
 
 TIME_RANGE_ORDER = [
@@ -110,10 +110,10 @@ WSGI_APPLICATION = 'IgCMS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'IgCMS',
+        'NAME': 'IntelliTeach',
         'USER': 'Igcms',
-        'PASSWORD': 'Ig@cms12',
-        'HOST': '8.208.33.217',
+        'PASSWORD': 'Hansraj@1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
