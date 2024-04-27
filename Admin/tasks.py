@@ -10,11 +10,17 @@ from django.conf import settings
 def get_Attendance():
     now = datetime.now()
     current_day = now.strftime("%A").lower()
-    current_time = now.time()
 
-    if timedelta(hours=9) <= current_time <= timedelta(hours=17):
+    if (current_day == 'saturday' or current_day == 'sunday'):
+        if should_process_attendance() and settings.TIME_TABLE_WEEKEND_CLASSES:
+            process_attendance()
+        else:
+            pass
+    else:
         if should_process_attendance():
             process_attendance()
+        else:
+            pass
         
 def should_process_attendance():
     return True

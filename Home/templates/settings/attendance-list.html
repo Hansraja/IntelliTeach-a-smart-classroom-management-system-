@@ -8,6 +8,12 @@
     <div class="table-responsive">
         {{attendance | safe }}
     </div>
+
+    {% if emp %}
+    <div class="mt-5">
+        <p class="text-base text-center"> Data not found</p>
+    </div>
+    {% endif %}
    
 </div>
 {% endblock %}

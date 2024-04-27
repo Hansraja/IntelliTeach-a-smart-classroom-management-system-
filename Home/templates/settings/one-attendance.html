@@ -3,13 +3,13 @@
 {% block content %}
 <div class="p-3 mb-5 bg-white rounded-2xl">
     <div class="mb-3 flex justify-between items-center">
-        <h4 class="text-base font-semibold">Attendance for {{ subject }}</h4>
+        <h4 class="text-base font-semibold">{{ subject }}</h4>
     </div>
-    <div class="table-responsive">
+    <div class="">
     {{ html_table | safe }}
     </div>
     {% if emp %}
-    <p>
+    <p class="mt-5">
         No Records Found
     </p>
     {% endif %}

@@ -97,7 +97,7 @@ def set_attendance(force=False, stop=False, time=None):
 
         day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         current_day_index = timezone.now().weekday()
-        current_day = day[current_day_index]
+        current_day = day[current_day_index] if settings.FACE_RECOGNITION_DAY == 'Auto' else settings.FACE_RECOGNITION_DAY
 
         tm = Time_Table.objects.filter(day=current_day)
         current_time = timezone.localtime().time()

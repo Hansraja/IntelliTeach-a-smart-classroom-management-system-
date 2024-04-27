@@ -59,6 +59,10 @@
                             <option value="Wednesday" {% if data.day == 'Wednesday' %} selected {% endif %}>Wednesday</option>
                             <option value="Thursday" {% if data.day == 'Thursday' %} selected {% endif %}>Thursday</option>
                             <option value="Friday" {% if data.day == 'Friday' %} selected {% endif %}>Friday</option>
+                            {% if weekends %}
+                            <option value="Saturday" {% if data.day == 'Saturday' %} selected {% endif %}>Saturday</option>
+                            <option value="Sunday" {% if data.day == 'Sunday' %} selected {% endif %}>Sunday</option>
+                            {% endif %}
                         </select>
                     </td>
                     <td>
@@ -79,8 +83,8 @@
     </form>
 
     <p class="mt-4 text-sm"> 
-        All the changes will be saved once you click on the update button.
-        if you set any field to empty, it will be removed from the time table.
+        All changes will be saved once you click the update button.
+        If you leave any field empty (except 'Subject'), it will be removed from the time table.
     </p>
 
     <script>

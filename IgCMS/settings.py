@@ -70,7 +70,9 @@ CELERY_BEAT_SCHEDULE = {
 FACE_RECOGNITION_ITERATIONS = 10
 FACE_RECOGNITION_THRESHOLD = 0.6
 FACE_RECOGNITION_TIMEOUT = 120
-TEST_ATTENDANCE = False
+FACE_RECOGNITION_DAY = 'Monday'
+
+TIME_TABLE_WEEKEND_CLASSES = False
 TOTAL_MARKS = 40
 
 TIME_RANGE_ORDER = [
@@ -108,10 +110,10 @@ WSGI_APPLICATION = 'IgCMS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'IntelliTeach',
+        'NAME': 'IgCMS',
         'USER': 'Igcms',
-        'PASSWORD': 'Hansraj@1',
-        'HOST': 'localhost',
+        'PASSWORD': 'Ig@cms12',
+        'HOST': '8.208.33.217',
         'PORT': '5432',
     }
 }

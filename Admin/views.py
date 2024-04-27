@@ -193,7 +193,7 @@ def time_table(request):
     if not html_table:
         return render(request=request, template_name='table.html', context={'title': f'Time table - {settings.APP_NAME}', 'emp': True})
 
-    context = {'html_table': html_table, 'title': f'Time table - {settings.APP_NAME}',}
+    context = {'html_table': html_table, 'title': f'Time table - {settings.APP_NAME}', 'weekends': settings.TIME_TABLE_WEEKEND_CLASSES}
     return render(request=request, template_name='table.html', context=context)
 
 
@@ -221,7 +221,7 @@ def update_time_table(request):
                     except Exception as e:
                         print(e)
                         return JsonResponse({'success': False, 'message': 'An error occurred while updating time table'})
-                elif not day or not time_from or not time_to or not subject:
+                elif not day or not time_from or not time_to:
                     Time_Table.objects.get(id=_id).delete()
             else:
                 return JsonResponse({'success': False, 'message': 'Invalid request'})
@@ -240,32 +240,46 @@ def update_time_table(request):
             'subject': obj.subject
         })
 
-    return render(request, 'update_table.html', {'time_table': arr, 'title': f'Time Table - {settings.APP_NAME}',})
+    return render(request, 'update_table.html', {'time_table': arr, 'title': f'Time Table - {settings.APP_NAME}', 'weekends': settings.TIME_TABLE_WEEKEND_CLASSES})
 
 
 
 def attendance_view(request):
-    if not request.user.is_faculty and not request.user.is_hod:
+    if not request.user.is_hod:
         return redirect('home')
     
      # Get all attendance records
-    attendance_records = Attendance.objects.all()
+    # attendance_records = Attendance.objects.all()
+
+    tm = Time_Table.objects.all()
     
     # Create a dictionary to store unique combinations of date and subject
     attendance_dict = {}
 
     # Populate the dictionary with attendance data
-    for attendance in attendance_records:
-        key = (attendance.created_at.date(), attendance.time.subject)
+    # for attendance in attendance_records:
+    #     key = (attendance.created_at.date(), attendance.time.subject, attendance.time.id)
+    #     if key not in attendance_dict:
+    #         attendance_dict[key] = {
+    #             'Day': attendance.time.day,
+    #             'Date': attendance.created_at.date(),
+    #             'Subject': attendance.time.subject,
+    #             'Time Range': f"{attendance.time.time_from.strftime('%I:%M %p') if attendance.time.time_from else ''} - {attendance.time.time_to.strftime('%I:%M %p') if attendance.time.time_to else ''}",
+    #             'View': f'<a href="/attendance/{attendance.time.id}" target="_blank">  <button class="btn btn-info btn-sm"> View </button> </a>'
+    #         }
+
+    for t in tm:
+        if not t.subject:
+            continue
+        key = (t.subject, t.id)
         if key not in attendance_dict:
             attendance_dict[key] = {
-                'Day': attendance.time.day,
-                'Date': attendance.created_at.date(),
-                'Subject': attendance.time.subject,
-                'Time Range': f"{attendance.time.time_from.strftime('%I:%M %p') if attendance.time.time_from else ''} - {attendance.time.time_to.strftime('%I:%M %p') if attendance.time.time_to else ''}",
-                'View': f'<a href="/attendance/{quote(string=attendance.time.subject)}" target="_blank">  <button class="btn btn-info btn-sm"> View </button> </a>'
+                'Day': t.day,
+                'Subject': t.subject,
+                'Time Range': f"{t.time_from.strftime('%I:%M %p') if t.time_from else ''} - {t.time_to.strftime('%I:%M %p') if t.time_to else ''}",
+                'View': f'<a href="/attendance/{t.id}" target="_blank">  <button class="btn btn-info btn-sm"> View </button> </a>'
             }
-
+    
     # Convert dictionary values to a list of dictionaries
     attendance_data = list(attendance_dict.values())
 
@@ -273,7 +287,7 @@ def attendance_view(request):
     attendance_df = pd.DataFrame(attendance_data)
 
     # Convert DataFrame to HTML
-    attendance_table = attendance_df.to_html(classes='table table-bordered', na_rep='', index_names=False, justify='center', escape=False, index=False)
+    attendance_table = attendance_df.to_html(classes='table rb_table table-bordered', na_rep='', index_names=False, justify='center', escape=False, index=False)
     context = {
         'attendance': attendance_table,
         'title': f'Attendance - {settings.APP_NAME}'
@@ -285,8 +299,9 @@ def one_attendance_view(request, id):
     if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
     try:
-        tm = Time_Table.objects.get(subject=unquote(id))
-        att = Attendance.objects.filter(time=tm)
+        # tm = Time_Table.objects.get(subject=unquote(id))
+        _id = int(id)
+        att = Attendance.objects.filter(time_id=_id).order_by('created_at')
 
         # Create a DataFrame to hold the attendance data
         data = []
@@ -295,7 +310,7 @@ def one_attendance_view(request, id):
         for attendance in att:
             students.add(attendance.student.user.get_full_name())
             data.append({
-                'Date': attendance.created_at.date(),
+                'Name / Date': attendance.created_at.date(),
                 'Student Name': attendance.student.user.get_full_name(),
                 'Status': 'P' if attendance.status else 'A'
             })
@@ -305,14 +320,50 @@ def one_attendance_view(request, id):
         df = pd.DataFrame(data)
 
         # Pivot the DataFrame to have dates as columns and students as rows
-        pivot_df = df.pivot(index='Student Name', columns='Date', values='Status')
+        pivot_df = df.pivot(index='Student Name', columns='Name / Date', values='Status')
 
         # Reorder columns by date
         pivot_df = pivot_df[sorted(dates)]
-        html_table = pivot_df.to_html(classes='table table-bordered', na_rep='', escape=False, justify='center', index_names=True, notebook=True, render_links=True)
+        html_table = pivot_df.to_html(classes='table rb_table table-bordered', na_rep='', escape=False, justify='center', index_names=True, notebook=True, render_links=True)
 
-        context = {'html_table': html_table, 'subject': tm.subject, 'title': f'Attendance - {settings.APP_NAME}'}
+        context = {'html_table': html_table, 'subject': f'Attendance for {att[0].time.subject}', 'title': f'Attendance - {settings.APP_NAME}'}
         return render(request=request, template_name='settings/one-attendance.html', context=context)
     except Exception as e:
         print(e)
-        return render(request=request, template_name='settings/one-attendance.html', context={'emp':True, 'title': f'Attendance - {settings.APP_NAME}'})
+        return render(request=request, template_name='settings/one-attendance.html', context={'emp':True, 'title': f'Attendance - {settings.APP_NAME}', 'subject': 'Attendance not available'})
+
+def attendance_view_faculty(request):
+    if not request.user.is_faculty:
+        return redirect('home')
+
+    tm = Time_Table.objects.filter(subject=request.user.faculty.subject)
+
+    if not tm and not request.user.faculty.subject:
+        return render(request=request, template_name='settings/attendance-list.html', context={'emp': True, 'title': f'Attendance - {settings.APP_NAME}'})
+    
+    attendance_dict = {}
+
+    for t in tm:
+        key = (t.subject, t.id)
+        if key not in attendance_dict:
+            attendance_dict[key] = {
+                'Day': t.day,
+                'Subject': t.subject,
+                'Time Range': f"{t.time_from.strftime('%I:%M %p') if t.time_from else ''} - {t.time_to.strftime('%I:%M %p') if t.time_to else ''}",
+                'View': f'<a href="/attendance/{t.id}" target="_blank">  <button class="btn btn-info btn-sm"> View </button> </a>'
+            }
+    
+    # Convert dictionary values to a list of dictionaries
+    attendance_data = list(attendance_dict.values())
+
+    # Create DataFrame from the list of dictionaries
+    attendance_df = pd.DataFrame(attendance_data)
+
+    # Convert DataFrame to HTML
+    attendance_table = attendance_df.to_html(classes='table rb_table table-bordered', na_rep='', index_names=False, justify='center', escape=False, index=False)
+    context = {
+        'attendance': attendance_table,
+        'title': f'Attendance - {settings.APP_NAME}'
+    }
+
+    return render(request=request, template_name='settings/attendance-list.html', context=context)
