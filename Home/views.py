@@ -260,10 +260,13 @@ from django.http import JsonResponse
 def attendance_runner(request):
     if not request.user.is_hod:
         return JsonResponse({'error': "Sorry, you can request on this endpoint!!"})
-    
-    value = set_attendance()
-    if value:
-        response_data = {'result': value, 'success': True}
-    else: 
-        response_data = {'result': 'Something Went Wrong!', 'success': False}       
-    return JsonResponse(response_data)
+    try:
+        value = set_attendance()
+        if value:
+            response_data = {'result': value, 'success': True}
+        else: 
+            response_data = {'result': 'Something Went Wrong!', 'success': False}       
+        return JsonResponse(response_data)
+    except Exception as e:
+        print(e)
+        return JsonResponse({'error': str(e)})

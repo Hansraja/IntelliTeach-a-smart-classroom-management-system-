@@ -8,6 +8,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'IgCMS.settings')
 
 app = Celery('IgCMS')
 
+app.conf.broker_connection_retry_on_startup = True
+
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
 app.config_from_object('django.conf:settings', namespace='CELERY')

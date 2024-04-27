@@ -64,7 +64,7 @@ celery -A IgCMS beat
 To run the application in a production environment, you can use Gunicorn to serve the application. You can do this by running the following command:
 
 ```bash
-gunicorn IgCMS.wsgi:application --bind 0.0.0.0:8000
+gunicorn IgCMS.wsgi:application --bind 0.0.0.0:8000 --timeout 300
 ```
 
 
