@@ -77,10 +77,11 @@ def update_student(request):
             student.mobile = mobile if mobile else student.mobile
             student.user.save()
             student.save()
-            student.user.send_email(subject='Account Update', message='Your account has been updated successfully.')
+            student.user.email_user(subject='Account Update', message='Your account has been updated successfully.', from_email=settings.DEFAULT_FROM_EMAIL)
         except ValidationError as e:
             return HttpResponseServerError("Something went wrong, try again.")
         except Exception as e:
+            print(e)
             students = Student.objects.all()
             context = {'title': f'Students - {settings.APP_NAME}', 'students': students, 'messages': [{'message': 'An error occurred!', 'tag': 'danger'}]}
             return render(request, 'student/index.html', context=context)

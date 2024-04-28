@@ -55,7 +55,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'IgCMS.urls'
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//' # RabbitMQ
 CELERY_BEAT_SCHEDULE = {
     'attendance_runner': {
         'task': 'Admin.tasks.get_Attendance',
@@ -67,7 +67,7 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-FACE_RECOGNITION_ITERATIONS = 10
+CELERY_TIMEZONE = 'Asia/Kolkata'
 FACE_RECOGNITION_THRESHOLD = 0.6
 FACE_RECOGNITION_TIMEOUT = 120
 FACE_RECOGNITION_DAY = 'Monday' # Add 'Auto' to automatically detect the day
@@ -117,7 +117,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+# DEFAULT_FILE_STORAGE = 'Admin.storage.CustomFileSystemStorage'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

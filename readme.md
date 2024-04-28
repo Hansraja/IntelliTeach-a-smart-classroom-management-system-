@@ -77,6 +77,28 @@ sudo apt update
 sudo apt install nginx
 ```
 
+You can change nginx server configuration file by running the following command:
+
+```bash
+sudo nano /etc/nginx/nginx.conf
+```
+
+Add the following line to the `http` block:
+
+```nginx
+client_max_body_size 500M;
+proxy_read_timeout 300s;
+```
+
+To enable the Nginx service to start on boot, you can run the following command:
+
+```bash
+sudo systemctl enable nginx
+```
+
+
+
+
 To set up Nginx as a reverse proxy server for the application, you will need to create a new server block configuration file in the `/etc/nginx/sites-available/` directory. You can use the following configuration as a template:
 
 ```nginx
@@ -122,3 +144,18 @@ Finally, you can restart the Nginx service to apply the changes:
 ```bash
 sudo systemctl restart nginx
 ```
+
+# Important Commands
+
+for find the process running on port 8000
+
+```bash
+sudo lsof -i :8000
+```
+
+for kill the process running on port 8000
+
+```bash
+kill -9 <PID>
+```
+

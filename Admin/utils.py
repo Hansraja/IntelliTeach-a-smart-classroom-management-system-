@@ -4,7 +4,7 @@ import os
 from .models import Student
 from Home.models import Attendance, Time_Table
 from django.conf import settings
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.utils import timezone
 import logging
 
@@ -16,7 +16,7 @@ def generate_embedding(path):
             face_image = face_recognition.load_image_file(path)
             face_encodings = face_recognition.face_encodings(face_image)
             if face_encodings:
-                return face_encodings[0]  # Assuming only one face in the image
+                return face_encodings[0] # Assuming only one face in the image
     except Exception as e:
         logger.error(f"Error generating embedding: {e}")
     return None
@@ -77,7 +77,14 @@ def recognize_faces(stop=False, time=None):
                         else:
                             res.append({'roll_no': roll_number, 'name': name, 'status': True})
                         break
-
+                else:
+                    for x in res:
+                        if x['roll_no'] == roll_number:
+                            x['status'] = False
+                            break
+                    else:
+                        res.append({'roll_no': roll_number, 'name': name, 'status': False})
+                        
             cv2.imshow("IntelliTeach Face Recognition", frame)
             if cv2.waitKey(1) == ord('q'):
                 break
@@ -110,7 +117,8 @@ def set_attendance(force=False, stop=False, time=None):
                 if attendance_entries.exists() and not force:
                     data = recognize_faces(time=time)
                     for d in data:
-                        student = Student.objects.get(roll_number=d['roll_no'])
+                        roll_number = int(d['roll_no'])
+                        student = Student.objects.get(roll_number=roll_number)
                         attendance_entry = attendance_entries.filter(student=student).first()
                         if attendance_entry and attendance_entry.status is False:
                             attendance_entry.status = d['status']
@@ -118,7 +126,8 @@ def set_attendance(force=False, stop=False, time=None):
                 else:
                     data = recognize_faces(time=time)
                     for d in data:
-                        student = Student.objects.get(roll_number=d['roll_no'])
+                        roll_number = int(d['roll_no'])
+                        student = Student.objects.get(roll_number=roll_number)
                         Attendance.objects.create(
                             teacher=None,
                             student=student,

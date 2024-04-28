@@ -157,6 +157,9 @@ def get_html_time_table():
         'Friday'
     ]
 
+    if settings.TIME_TABLE_WEEKEND_CLASSES:
+        day_order.extend(['Saturday', 'Sunday'])
+
     # Pivot the DataFrame to rearrange the data
     df_pivot = df.pivot(index='day', columns='time_range', values='subject')
 
@@ -326,7 +329,7 @@ def one_attendance_view(request, id):
         pivot_df = pivot_df[sorted(dates)]
         html_table = pivot_df.to_html(classes='table rb_table table-bordered', na_rep='', escape=False, justify='center', index_names=True, notebook=True, render_links=True)
 
-        context = {'html_table': html_table, 'subject': f'Attendance for {att[0].time.subject}', 'title': f'Attendance - {settings.APP_NAME}'}
+        context = {'html_table': html_table, 'subject': f'Attendance for {att[0].time.subject} ({att[0].time.time_from.strftime("%I:%M %p")} - {att[0].time.time_to.strftime("%I:%M %p")})', 'title': f'Attendance - {settings.APP_NAME}'}
         return render(request=request, template_name='settings/one-attendance.html', context=context)
     except Exception as e:
         print(e)

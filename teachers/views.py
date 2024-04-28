@@ -35,13 +35,13 @@ def facultyDashboard(request):
 def faculty_Profile(request):
     if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
-    context = {'title': title, 'menuItems': menu }
+    context = {'title': title, }
     return render(request, 'settings/profile.html', context=context)
 
 def add_student(request):
     if not request.user.is_faculty and not request.user.is_hod:
         return redirect('home')
-    context = {'title': f'Add Students - {settings.APP_NAME}', 'menuItems': menu }
+    context = {'title': f'Add Students - {settings.APP_NAME}', }
     return render(request, 'faculty/add_students.html', context=context)
 
 def teachers_list(request):
