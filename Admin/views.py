@@ -319,7 +319,6 @@ def one_attendance_view(request, id):
             })
             dates.add(attendance.created_at.date())
 
-        # Create DataFrame
         df = pd.DataFrame(data)
 
         # Pivot the DataFrame to have dates as columns and students as rows

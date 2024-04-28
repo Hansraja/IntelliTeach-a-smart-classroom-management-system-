@@ -70,7 +70,7 @@ CELERY_BEAT_SCHEDULE = {
 CELERY_TIMEZONE = 'Asia/Kolkata'
 FACE_RECOGNITION_THRESHOLD = 0.6
 FACE_RECOGNITION_TIMEOUT = 120
-FACE_RECOGNITION_DAY = 'Monday' # Add 'Auto' to automatically detect the day
+FACE_RECOGNITION_DAY = 'Auto' # Add 'Auto' to automatically detect the day
 
 TIME_TABLE_WEEKEND_CLASSES = False # If True, the timetable will be generated for weekend classes
 TOTAL_MARKS = 40
