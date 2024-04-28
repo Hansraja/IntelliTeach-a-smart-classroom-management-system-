@@ -108,7 +108,7 @@ def set_attendance(force=False, stop=False, time=None):
 
         tm = Time_Table.objects.filter(day=current_day)
         current_time = timezone.localtime().time()
-
+        print(current_time)
         for t in tm:
             if t.time_from <= current_time <= t.time_to:
                 attendance_date = datetime.now().date()
@@ -135,9 +135,10 @@ def set_attendance(force=False, stop=False, time=None):
                             status=d['status']
                         )
                 return  'Attendance Added Successfuly!!'
-
-        logger.info("No classes scheduled for today.")
-        return 'No classes scheduled for today'
+            return 'No classes scheduled for now'
+        else:
+            logger.info("No classes scheduled for today.")
+            return 'No classes scheduled for today'
     except Exception as e:
         logger.error(f"Error setting attendance: {e}")
         return 'Error setting attendance'
