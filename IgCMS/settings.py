@@ -110,10 +110,10 @@ WSGI_APPLICATION = 'IgCMS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'IgCMS',
+        'NAME': 'IntelliTeach',
         'USER': 'Igcms',
-        'PASSWORD': 'Ig@cms12',
-        'HOST': '8.208.33.217',
+        'PASSWORD': 'Hansraj@1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

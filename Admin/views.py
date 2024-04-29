@@ -213,7 +213,7 @@ def update_time_table(request):
             time_to = datetime.datetime.strptime(obj.get('to', None), '%H:%M').time() if obj.get('to', None) else None
             subject = obj.get('subject', None)
             if _id:
-                if day and time_from and time_to and subject:
+                if day and time_from and time_to and subject and not subject == 'None':
                     try:
                         time_table = Time_Table.objects.get(id=_id)
                         time_table.day = day
@@ -224,7 +224,7 @@ def update_time_table(request):
                     except Exception as e:
                         print(e)
                         return JsonResponse({'success': False, 'message': 'An error occurred while updating time table'})
-                elif not day or not time_from or not time_to:
+                elif subject == 'None':
                     Time_Table.objects.get(id=_id).delete()
             else:
                 return JsonResponse({'success': False, 'message': 'Invalid request'})
