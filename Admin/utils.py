@@ -108,14 +108,16 @@ def set_attendance(force=False, stop=False, time=None):
 
         tm = Time_Table.objects.filter(day=current_day)
         current_time = timezone.localtime().time()
-
+        print(tm, current_time)
         for t in tm:
+            print(t.time_from, t.time_to)
             if t.time_from <= current_time <= t.time_to:
                 attendance_date = datetime.now().date()
                 attendance_entries = Attendance.objects.filter(time=t, created_at__date=attendance_date)
 
                 if attendance_entries.exists() and not force:
                     data = recognize_faces(time=time)
+                    print(data, 'existing')
                     for d in data:
                         roll_number = int(d['roll_no'])
                         student = Student.objects.get(roll_number=roll_number)
@@ -125,6 +127,7 @@ def set_attendance(force=False, stop=False, time=None):
                             attendance_entry.save()
                 else:
                     data = recognize_faces(time=time)
+                    print(data, 'new')
                     for d in data:
                         roll_number = int(d['roll_no'])
                         student = Student.objects.get(roll_number=roll_number)
