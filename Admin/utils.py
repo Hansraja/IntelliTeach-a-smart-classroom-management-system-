@@ -119,8 +119,7 @@ def set_attendance(force=False, stop=False, time=None):
                     data = recognize_faces(time=time)
                     print(data, 'existing')
                     for d in data:
-                        roll_number = int(d['roll_no'])
-                        student = Student.objects.get(roll_number=roll_number)
+                        student = Student.objects.get(roll_number=d['roll_no'])
                         attendance_entry = attendance_entries.filter(student=student).first()
                         if attendance_entry and attendance_entry.status is False:
                             attendance_entry.status = d['status']
@@ -129,8 +128,7 @@ def set_attendance(force=False, stop=False, time=None):
                     data = recognize_faces(time=time)
                     print(data, 'new')
                     for d in data:
-                        roll_number = int(d['roll_no'])
-                        student = Student.objects.get(roll_number=roll_number)
+                        student = Student.objects.get(roll_number=d['roll_no'])
                         Attendance.objects.create(
                             teacher=None,
                             student=student,
