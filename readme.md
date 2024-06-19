@@ -108,14 +108,14 @@ server {
 
     # Location for static files
     location /static/ {
-        alias /home/ravi/Documents/Projects/IgCMS/static/;
+        alias /home/hans/Documents/IgCMS/static/;
         autoindex on;
         index index.html;
     }
 
     # Location for media files
     location /media/ {
-        alias /home/ravi/Documents/Projects/IgCMS/media/;
+        alias /home/hans/Documents/IgCMS/media/;
         autoindex on;
         index index.html;
     }

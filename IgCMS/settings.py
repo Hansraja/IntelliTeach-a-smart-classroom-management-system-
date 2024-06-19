@@ -111,7 +111,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'IntelliTeach',
-        'USER': 'Igcms',
+        'USER': 'IntelliTeach',
         'PASSWORD': 'Hansraj@1',
         'HOST': 'localhost',
         'PORT': '5432',
