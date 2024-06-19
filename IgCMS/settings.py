@@ -76,7 +76,7 @@ TIME_TABLE_WEEKEND_CLASSES = False # If True, the timetable will be generated fo
 TOTAL_MARKS = 40
 
 TIME_RANGE_ORDER = [
-    '07:00 AM - 08:00 AM',
+    '09:00 AM - 10:00 AM',
     '10:00 AM - 11:00 AM',
     '11:00 AM - 12:00 PM',
     '12:00 PM - 01:00 PM',
