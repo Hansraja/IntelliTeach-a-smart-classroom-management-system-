@@ -11,7 +11,7 @@ COLLEGE_NAME = 'IntelliTeach'
 SECRET_KEY = 'django-insecure-5tm(^75*kg(d6=f&nn91-esky50y#0zuqzd87dp^(l@bl^4n5c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
 
@@ -111,8 +111,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'IntelliTeach',
-        'USER': 'IntelliTeach',
-        'PASSWORD': 'Hansraj@1',
+        'USER': 'hans',
+        'PASSWORD': 'hanssaini',
         'HOST': 'localhost',
         'PORT': '5432',
     }
